@@ -9,8 +9,6 @@ $(function() {
                 .appendTo("#stuff");
         }
 
-        res.tree.push({path: "lol", type: "tree"});
-
         jQuery.each(res.tree, function(i, v) {
             if (v.type == "tree") {
                 var p = v.path;
