@@ -1,0 +1,7 @@
+{
+    "description": "Reads 4chan threads using the client-side meSpeak.js",
+    "hidden": false,
+    "boring": false,
+    "wip": true,
+    "emphasis": false
+}

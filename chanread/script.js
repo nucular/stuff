@@ -1,10 +1,14 @@
 var playnext = true;
+var voices = ["en", "en-n", "en-rp", "en-sc", "en-us", "en-wm"];
 
 function playThread(res) {
     playnext = true;
 
     // Store personalities
     var persons = {};
+    // wait until done
+    var done = true;
+    var i = 0;
 
     function nextMessage(i) {
         if (i > res.length || !playnext) {
@@ -14,14 +18,12 @@ function playThread(res) {
         }
         var p = res.posts[i];
 
-        if (p.com) {
-            console.log(p);
-
+        if (p && p.com) {
             // strip html and stuff
             var msg = p.com.replace(/<(?:.|\n)*?>/gm, "");
             msg = msg.replace(/(&gt;)+ ?\d+/g, "\n");
             msg = msg.replace(/&gt; ?/g, " ");
-            msg = msg.replace("\n", " ");
+            //msg = msg.replace("\n", " ");
             msg = msg.replace(/https?:\/\/[^\s]+/, " ");
 
             // replace html entities
@@ -35,29 +37,37 @@ function playThread(res) {
                 else {
                     options = {
                         amplitude: 70 + (Math.random() * 50),
-                        pitch: 20 + (Math.random() * 120),
-                        speed: 140 + (Math.random() * 90),
-                        wordgap: -10 + (Math.random() * 10)
+                        pitch: 10 + (Math.random() * 60),
+                        speed: 130 + (Math.random() * 80),
+                        //wordgap: -10 + (Math.random() * 10),
+                        voice: voices[Math.floor(Math.random() * voices.length)]
                     }
                     persons[p.id] = options;
                 }
 
                 $("#status").text("Generating message " + i + " by " + p.id + " (" + p.name + ")...");
                 $("#message")[0].innerHTML = p.com;
-                speak.play(msg, options, function() {
-                    nextMessage(i + 1);
+                meSpeak.loadVoice("voices/en/" + options.voice);
+                meSpeak.speak(msg, options, function() {
+                    done = true;
                 });
             }
             else {
-                nextMessage(i + 1);
+                done = true;
             }
         }
         else {
-            nextMessage(i + 1);
+            done = true;
         }
     }
 
-    nextMessage(0);
+    setInterval(function() {
+        if (done) {
+            i++;
+            done = false;
+            nextMessage(i);
+        }
+    }, 500)
 }
 
 function fetchThread(url) {
@@ -88,8 +98,13 @@ function fetchThread(url) {
 }
 
 $(function() {
-    $("#status").text("Loading speak.js...");
-    speak.play(".", {}, function() {
+    $("#status").text("Loading speak.js... may take a while");
+    jQuery.getScript("mespeak.js", function() {
+        meSpeak.loadConfig("mespeak_config.json");
+        // pre-load all voices for faster access later
+        for (var i = 0; i < voices.length; i++) {
+            meSpeak.loadVoice("voices/en/" + voices[i] + ".json");
+        }
         $("#status").text("Ready.");
         $("#panel").css("visibility", "visible");
     });
