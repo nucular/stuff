@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LiveDoge &middot; by nucular</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <p id="header">
+        <small id="desc">powered by <a href="http://dogechain.info">dogechain.info</a></small>
+        <span id="subs">
+            Subscribe to:
+            <a href="#" title="Subscribe to all unconfirmed transactions" id="subbut_unconf">Unconfirmed</a> &middot;
+            <a href="#" title="Subscribe to transactions outgoing from a specific address" id="subbut_address">Address</a> &middot;
+            <a href="#" title="Subscribe to all new blocks" id="subbut_blocks">Blocks</a>
+        </span>
+    </p>
+
+    <img src="dogecoin-300.png" id="dogecoin"></img>
+
+    <div id="ticker">
+        <span class="message">
+            <span class="time">[start]</span>
+            <span class="bar info"></span>
+            <span class="content">Welcome to LiveDoge.<br>
+                Click the buttons above to subscribe to stuff. Click again to unsubscribe.<br>
+                Your subscriptions should be saved and will be restored on your next visit.</span>
+        </span>
+    </div>
+</body>
+</html>

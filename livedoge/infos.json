@@ -1,0 +1,7 @@
+{
+    "description": "Realtime list of all Dogecoin transactions and blocks",
+    "hidden": false,
+    "boring": false,
+    "wip": false,
+    "emphasis": false
+}

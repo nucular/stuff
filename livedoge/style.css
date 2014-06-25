@@ -1,0 +1,138 @@
+html, body {
+    background-color: #f5f5f5;
+
+    color: #333;
+    padding: 0px;
+    margin: 0px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-size: 12px;
+}
+
+a {
+    color: #0070bb;
+    text-decoration: none;
+}
+a:hover {
+    color: #035;
+}
+
+.muted {
+    color: #555;
+}
+
+
+#header {
+    font-family: "Comic Sans MS", monospace;
+    font-size: 14px;
+
+    display: block;
+    z-index: 2;
+    position: absolute;
+
+    background-color: #e7e7e7;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0px;
+    width: 100%;
+}
+
+#desc {
+    float: right;
+    margin-right: 10px;
+}
+
+#subs {
+    margin-left: 10px;
+}
+
+
+
+#dogecoin {
+    position: fixed;
+    right: 4%;
+    bottom: 5%;
+
+    opacity: 0.2;
+}
+
+
+
+#ticker {
+    font-family: monospace;
+    font-size: 120%;
+
+    display: block;
+    overflow: auto;
+
+    z-index: 1;
+    position: absolute;
+    bottom: 0;
+
+    max-width: 100%;
+
+    padding: 10px;
+}
+
+#ticker hr {
+    border: 0;
+    color: #aaa;
+    background-color: #aaa;
+
+    margin: 0px;
+    margin-left: 60px;
+    padding: 0px;
+    height: 1px;
+    width: 120px;
+}
+
+#ticker .message {
+    display: table;
+}
+
+#ticker .time {
+    display: table-cell;
+    width: 85px;
+    color: #777;
+    vertical-align: top;
+}
+
+#ticker .bar {
+    display: table-cell;
+    width: 3px;
+    font-weight: bold;
+    vertical-align: top;
+}
+
+#ticker .content {
+    position: relative;
+    left: 5px;
+    width: 80%;
+}
+
+
+
+#ticker .info {
+    background-color: #777;
+}
+
+#ticker .success {
+    background-color: #090;
+}
+
+#ticker .failure {
+    background-color: #e20;
+}
+
+#ticker .block {
+    background-color: #05e;
+}
+
+#ticker .unconf {
+    background-color: #e50;
+}
+
+#ticker .address {
+    background-color: #ee0;
+}
