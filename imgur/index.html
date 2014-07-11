@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Imgur roulette</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="../../js/jquery.min.js"></script>
+    <script src="script.js"></script>
+    <script src="analytics.min.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="centered">
+            <div class="nav" id="prevbutton"></div>
+            <div class="nav" id="nextbutton"></div>
+
+            <img id="loading" src="loading.gif">
+        </div>
+    </div>
+
+    <div id="statusbar">
+        <span id="piccount">Picture 1/1</span>
+        <span id="favcount">Favourite x/0</span>
+        <br>
+        <span id="trycount">Tries: 0</span>&nbsp;&nbsp;
+        <a id="picurl" href="#">http://i.imgur.com/?????.png</a>
+        <br>
+        ID length:&nbsp;&nbsp;
+        <span id="radios">
+            <input id="length5" type="radio" name="charlength" value="5" checked="true">
+            <label for="length5">5</label>
+            <input id="lengthRandom" type="radio" name="charlength" value="Random">
+            <label for="lengthRandom">Random</label>
+            <input id="length7" type="radio" name="charlength" value="7">
+            <label for="length7">7 (slow!)</label>
+        </span>
+    </div>
+</body>
+</html>
