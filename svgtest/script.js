@@ -74,17 +74,17 @@ $(function() {
 
     if (window.location.search.length > 1) {
         $image.attr("src", window.location.search.substr(1));
-        $image.bind("load", function() {
-            img_width = $image.width();
-            img_height = $image.height();
-        });
     }
+
+    $image.bind("load", function() {
+        img_width = $image.width();
+        img_height = $image.height();
+        animate();
+    });
 
     $(window).bind("resize", function(e) {
         resized = true;
     });
 
     then = Date.now();
-    //setInterval(animate, 1000 / 60);
-    animate();
 });
