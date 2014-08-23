@@ -8,7 +8,12 @@
 	<script src="script.js"></script>
 </head>
 <body>
-	<img id="image" src="hint.png"/>
+	<div id="warning">
+		<h1>EPILEPSY WARNING</h1>
+		Click anywhere to continue!
+	</div>
+
+	<img id="image"/>
 
 	<!-- shit's embedded so I can change stuff from js -->
 	<svg id="starburst" width="100%" height="100%" viewBox="-256 -256 512 512"
@@ -27,7 +32,7 @@
 	  </g>
 	  <linearGradient id="grad" x1="0%" y1="50%" x2="0%" y2="95%">
 		<stop offset="0%" stop-color="black" stop-opacity="0"/>
-		<stop id="starburst-color" offset="100%" stop-color="black" stop-opacity="1"/>
+		<stop id="starburst-color" offset="100%" stop-color="white" stop-opacity="1"/>
 	  </linearGradient>
 	</defs>
 	<g id="starburst-g" mask="url(#m)" transform="scale(1, 1)">

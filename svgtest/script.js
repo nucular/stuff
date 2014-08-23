@@ -1,5 +1,6 @@
 var $body;
 var $image;
+var $warning;
 
 var $starburst;
 var $starburst_rays;
@@ -62,28 +63,38 @@ setInterval(function() {
             $starburst.attr("transform", "scale(" + wf + "," + 1 + ")");
         else
             $starburst.attr("transform", "scale(" + 1 + "," + hf + ")");
+
+        $warning.css("padding-top", win_height / 2 - 200)
     }
 }, 300)
 
 $(function() {
     $body = $(document.body);
     $image = $("#image");
+    $warning = $("#warning");
+
     $starburst = $("#starburst-g");
     $starburst_rays = $("#starburst-rays");
     $starburst_color = $("#starburst-color");
 
-    if (window.location.search.length > 1) {
-        $image.attr("src", window.location.search.substr(1));
-    }
-
-    $image.bind("load", function() {
-        img_width = $image.width();
-        img_height = $image.height();
-        animate();
+    $(window).on("resize", function(e) {
+        resized = true;
     });
 
-    $(window).bind("resize", function(e) {
-        resized = true;
+    $warning.on("click", function() {
+        $warning.css("display", "none");
+
+        if (window.location.search.length > 1) {
+            $image.attr("src", window.location.search.substr(1));
+        } else {
+            $image.attr("src", "hint.png");
+        }
+
+        $image.on("load", function() {
+            img_width = $image.width();
+            img_height = $image.height();
+            animate();
+        });
     });
 
     then = Date.now();
