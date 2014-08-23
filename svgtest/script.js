@@ -17,6 +17,7 @@ var frame = 0;
 
 var img_rot = 0;
 var img_scale = 0;
+var img_scale_mult = 1;
 var img_width = 500, img_height = 300;
 
 var win_width = 0, win_height = 0;
@@ -33,7 +34,7 @@ function animate() {
     $starburst_rays.attr("transform", "rotate(" + (time * 50) + ")");
     $starburst_color.attr("stop-color", colors[(frame + 1) % colors.length]);
 
-    img_scale = 0.8 + (Math.cos(time * 20) / 4);
+    img_scale = (1 + (Math.cos(time * 20) / 4)) * img_scale_mult;
     var width = img_width * img_scale;
     var height = img_height * img_scale;
     var x = (win_width / 2) - (width / 2), y = (win_height / 2) - (height / 2);
@@ -63,6 +64,10 @@ setInterval(function() {
             $starburst.attr("transform", "scale(" + wf + "," + 1 + ")");
         else
             $starburst.attr("transform", "scale(" + 1 + "," + hf + ")");
+
+        img_scale_mult = Math.min(Math.min(
+            win_width / img_width / 1.5, win_height / img_height / 1.8
+        ), 1);
 
         $warning.css("padding-top", win_height / 2 - 200)
     }
