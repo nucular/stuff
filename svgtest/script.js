@@ -125,7 +125,7 @@ $(function() {
             }
         } else {
             $content = $image;
-            $image.attr("src", "hint.png");
+            $image.attr("src", "hint.gif");
         }
 
         $content.on("load", function() {
