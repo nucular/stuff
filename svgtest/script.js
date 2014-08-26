@@ -1,5 +1,5 @@
 var $body;
-var $image;
+var $content;
 var $warning;
 
 var $starburst;
@@ -39,7 +39,7 @@ function animate() {
     var height = img_height * img_scale;
     var x = (win_width / 2) - (width / 2), y = (win_height / 2) - (height / 2);
 
-    $image.css({
+    $content.css({
         "width": Math.floor(width),
         "height": Math.floor(height),
         "transform": "rotate(" + img_rot + "deg)",
@@ -75,8 +75,11 @@ setInterval(function() {
 
 $(function() {
     $body = $(document.body);
-    $image = $("#image");
     $warning = $("#warning");
+
+    $image = $("#image");
+    $youtube = $("#youtube");
+    $z0r = $("#z0r");
 
     $starburst = $("#starburst-g");
     $starburst_rays = $("#starburst-rays");
@@ -90,14 +93,45 @@ $(function() {
         $warning.css("display", "none");
 
         if (window.location.search.length > 1) {
-            $image.attr("src", window.location.search.substr(1));
+            var url = window.location.search.substr(1);
+            var m = url.match(/(?:https?:\/\/)?(?:www\.)?youtube.com\/watch\?v=([a-zA-Z0-9-]{11})/);
+            if (m) {
+                var embd = "http://www.youtube.com/embed/" + m[1] + "?autoplay=1&controls=0&fs=0&iv_load_policy=3&loop=1&rel=0&disablekb=1";
+                $youtube.attr("src", embd);
+                $content = $youtube;
+            } else {
+                var m = url.match(/(?:https?:\/\/)?(?:www\.)?z0r\.de\/(\d+)/);
+                if (m) {
+                    var embd = "http://z0r.de/L/z0r-de_" + m[1] + ".swf";
+                    $z0r.attr("data", embd);
+                    $content = $z0r;
+
+                    // onload does not fire for objects D:
+                    if ($z0r[0].TGetProperty) {
+                        img_width = $z0r[0].TGetProperty("/", 8);
+                        img_height = $z0r[0].TGetProperty("/", 9);
+                        $z0r.attr("width", img_width).attr("height", img_height);
+                    } else {
+                        img_width = 853;
+                        img_height = 480;
+                        $z0r.attr("width", 853).attr("height", 480);
+                    }
+                    $content.css("display", "block");
+                    animate();
+                } else {
+                    $content = $image;
+                    $image.attr("src", url);
+                }
+            }
         } else {
+            $content = $image;
             $image.attr("src", "hint.png");
         }
 
-        $image.on("load", function() {
-            img_width = $image.width();
-            img_height = $image.height();
+        $content.on("load", function() {
+            img_width = $content.width();
+            img_height = $content.height();
+            $content.css("display", "block");
             animate();
         });
     });

@@ -25,6 +25,11 @@ html, body {
     z-index: 0;
 }
 
-#image {
+.content {
+    display: none;
     position: absolute;
+}
+
+#z0r {
+    background-color: rgba(0, 0, 0, 0);
 }
