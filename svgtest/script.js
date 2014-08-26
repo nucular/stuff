@@ -94,7 +94,7 @@ $(function() {
 
         if (window.location.search.length > 1) {
             var url = window.location.search.substr(1);
-            var m = url.match(/(?:https?:\/\/)?(?:www\.)?youtube.com\/watch\?v=([a-zA-Z0-9-]{11})/);
+            var m = url.match(/(?:https?:\/\/)?(?:www\.)?youtube.com\/watch\?v=([a-zA-Z0-9-_]{11})/);
             if (m) {
                 var embd = "http://www.youtube.com/embed/" + m[1] + "?autoplay=1&controls=0&fs=0&iv_load_policy=3&loop=1&rel=0&disablekb=1";
                 $youtube.attr("src", embd);
