@@ -1,5 +1,8 @@
 var resizeTimer = 0;
-var meanDuration = 1;
+
+var meanSamples = 0;
+var meanSum = 0;
+
 var lastTime, targetTime;
 
 function pad(num, size) {
@@ -96,14 +99,15 @@ $(function() {
                 $("#status").text("Waiting for another block...may take a while");
                 lastTime = data.value.time;
             } else {
-                meanDuration = (meanDuration + (
-                    (data.value.time - lastTime) / 60
-                )) / 2;
+                meanSum += (data.value.time - lastTime) / 60;
+                meanSamples++;
+                var mean = meanSum / meanSamples;
+
                 lastTime = data.value.time;
-                minutes = meanDuration * remaining;
+                minutes = mean * remaining;
 
                 $("#status").text("Connected");
-                $("#blocktime").text(Math.round(meanDuration * 1000) / 1000);
+                $("#blocktime").text(Math.round(mean * 1000) / 1000);
             }
         }
     });
