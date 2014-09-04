@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Waiting...</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+
+    <link href="http://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="./jquery.quickfit.js"></script>
+    <script src="http://js.pusher.com/2.2/pusher.min.js"></script>
+    <script src="./script.js"></script>
+</head>
+<body>
+    <b id="header">Estimated time until AuxPoW (Block 371337):</b>
+    <div id="timer">AuxTimer: 000:00:00</div>
+    <div id="infos">
+        Mean block time: <span id="blocktime">1</span>min&nbsp;&middot;&nbsp;
+        Block #<span id="blocknum">0</span> (<span id="remaining">0</span> remaining)&nbsp;&middot;&nbsp;
+        Miner: <span id="blockminer">Unknown</span>&nbsp;&middot;&nbsp;
+        TXs: <span id="blocktxs">0</span>&nbsp;&middot;&nbsp;
+        Diff: <span id="blockdiff">0</span>
+    </div>
+    <span id="status">Waiting...</span>
+
+    <span id="footer">Written by <a href="http://nucular.github.io">nucular</a>, powered by <a href="http://chain.so">chain.so</a></span>
+</body>
+</html>

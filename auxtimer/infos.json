@@ -1,0 +1,7 @@
+{
+    "description": "Estimates the time until block 371337, i.e AuxPoW",
+    "hidden": false,
+    "boring": false,
+    "wip": false,
+    "emphasis": false
+}
