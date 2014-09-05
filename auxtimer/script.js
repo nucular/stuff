@@ -13,7 +13,7 @@ function pad(num, size) {
 
 function secondsToTime(secs)
 {
-    var d = new Date(null);
+    var d = new Date(1970, 0, -3);
     d.setSeconds(secs);
     return pad(d.getDay(), 2) + "d "
         + pad(d.getHours(), 2) + ":"
