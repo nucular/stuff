@@ -52,6 +52,10 @@ a:hover {
     color: #fff;
 }
 
+.zero {
+    opacity: 0.7;
+}
+
 #infos {
     font-size: 1.4em;
     margin: 20px;

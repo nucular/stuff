@@ -13,16 +13,12 @@ function pad(num, size) {
 
 function secondsToTime(secs)
 {
-    secs = Math.round(secs);
-    var hours = Math.floor(secs / (60 * 60));
-
-    var divisor_for_minutes = secs % (60 * 60);
-    var minutes = Math.floor(divisor_for_minutes / 60);
-
-    var divisor_for_seconds = divisor_for_minutes % 60;
-    var seconds = Math.ceil(divisor_for_seconds);
-
-    return pad(hours, 3) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
+    var d = new Date(null);
+    d.setSeconds(secs);
+    return pad(d.getDay(), 2) + "d "
+        + pad(d.getHours(), 2) + ":"
+        + pad(d.getMinutes(), 2) + ":"
+        + pad(d.getSeconds(), 2);
 }
 
 function minutesBetween(startDate, endDate) {
@@ -54,11 +50,6 @@ $(function() {
     Pusher.host = "slanger1.chain.so";
     Pusher.ws_port = 443;
     Pusher.wss_port = 443;
-    Pusher.log = function(message) {
-        if (window.console && window.console.log) {
-            window.console.log(message);
-        }
-    };
 
     var pusher = new Pusher("e9f5cc20074501ca7395", {
         encrypted: true,
@@ -122,8 +113,13 @@ $(function() {
                     $("#header").text("Safe mode disabled for miners");
                 }
                 var t = secondsToTime(minutes * 60);
-                $("#timer").text(t);
                 window.document.title = t;
+
+                $("#timer").html("");                
+                t = t.replace(/\:/g, "<span class=\"zero\">:</span>")
+                        .replace(/d/g, "<span class=\"zero\">d</span>");
+                $("#timer").html(t);
+
                 minutes -= (1 / 60);
             }
         }
