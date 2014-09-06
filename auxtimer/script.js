@@ -1,3 +1,4 @@
+var targetBlock = 371337;
 var resizeTimer = 0;
 
 var meanSamples = 0;
@@ -21,20 +22,16 @@ function secondsToTime(secs)
         + pad(d.getSeconds(), 2);
 }
 
-function minutesBetween(startDate, endDate) {
-    var diff = endDate.getTime() - startDate.getTime();
-    return (diff / 60000);
-}
-
 $(function() {
     // set target
-    minutes = minutesBetween(
-        new Date(),
-        new Date("2014.09.12-04:56:00")
-    );
+    $.getJSON("https://chain.so/api/v2/get_info/DOGE", function(res, code, xhr) {
+        minutes = targetBlock - res.data.blocks;
+        $("#blocknum").text(res.data.blocks);
+        $("#remaining").text(minutes);
+        $("#timer").quickfit({max: Infinity});
+    });
 
     // timer resizing
-    $("#timer").quickfit({max: Infinity});
     $(window).bind("resize", function(e) {
         resizeTimer = 2;
     });
@@ -83,7 +80,7 @@ $(function() {
                 Math.round(data.value.mining_difficulty * 1000) / 1000
             );
 
-            var remaining = 371337 - data.value.block_no;
+            var remaining = targetBlock - data.value.block_no;
             $("#remaining").text(remaining);
 
             if (!lastTime) {

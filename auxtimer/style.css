@@ -67,6 +67,20 @@ a:hover {
 
 #footer {
     position: absolute;
-    bottom: 5px;
-    right: 10px;
+    bottom: 0px;
+    left: 0px;
+    padding: 5px;
+    background-color: #fff;
+}
+
+#kabosu {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+}
+
+@media (max-height: 320px) {
+    #footer {
+        display: none;
+    }
 }
