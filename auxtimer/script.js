@@ -40,6 +40,12 @@ $(function() {
             resizeTimer--;
             if (resizeTimer == 0) {
                 $("#timer").quickfit({max: Infinity});
+
+                if ($("#content").height() > $(window).height() - 180) {
+                    $("#kabosu").animate({bottom: -180}, 300);
+                } else {
+                    $("#kabosu").animate({bottom: 0}, 500);
+                }
             }
         }
     }, 200);
