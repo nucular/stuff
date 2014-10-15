@@ -175,7 +175,7 @@ function processInfos(t) {
 }
 
 function showResults(r) {
-    $loading.fadeOut("fast");
+    $loading.slideUp("fast");
     if (r.hasOwnProperty("status") && r.status == "fail") {
         if (r.hasOwnProperty("reason")) {
             $error.text(r.reason.replace(/\+/g, " "));
@@ -183,7 +183,7 @@ function showResults(r) {
         else {
             $error.text("Unknown error on YouTube side.");
         }
-        $().add($fetchbutton).add($videoinput).add($error).fadeIn("slow");
+        $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
         return;
     }
 
@@ -240,11 +240,15 @@ function showResults(r) {
         });
     }
 
-    $().add($fetchbutton).add($videoinput).add($results).fadeIn("slow");
+    if (r.hasOwnProperty("thumbnail_url")) {
+    	$("#thumbnail").attr("src", r.thumbnail_url);
+    }
+
+    $().add($fetchbutton).add($videoinput).add($results).slideDown("slow");
 }
 
 function fetchInfos(e) {
-    $().add($fetchbutton).add($videoinput).add($error).add($results).fadeOut("fast");
+    $().add($fetchbutton).add($videoinput).add($error).add($results).slideUp("fast");
 
     var url = $videoinput.val();
     var id;
@@ -258,22 +262,22 @@ function fetchInfos(e) {
         }
         else {
             $error.text("Invalid URL or ID!");
-            $().add($fetchbutton).add($videoinput).add($error).fadeIn("slow");
+            $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
             return;
         }
     }
 
     loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
     loadingstate = 0;
-    $loading.fadeIn("slow");
+    $loading.slideDown("slow");
     $.jsonp({
         url: "https://youtube.com/get_video_info?video_id=" + id,
         dataType: "json",
         error: function(xhr, ts, e) {
             if (xhr.status != 502) {
-                $loading.fadeOut("fast");
+                $loading.slideUp("fast");
                 $error.text(e);
-                $().add($fetchbutton).add($videoinput).add($error).fadeIn("slow");
+                $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
             } else {
                 var p = processInfos(xhr.responseJSON.error);
                 showResults(p);
