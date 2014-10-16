@@ -178,7 +178,7 @@ function showResults(r) {
     $loading.slideUp("fast");
     if (r.hasOwnProperty("status") && r.status == "fail") {
         if (r.hasOwnProperty("reason")) {
-            $error.text(r.reason.replace(/\+/g, " "));
+            $error.html(r.reason.replace(/\+/g, " "));
         }
         else {
             $error.text("Unknown error on YouTube side.");
@@ -188,6 +188,7 @@ function showResults(r) {
     }
 
     var title = r.title.replace(/\+/g, " ").replace(/'/g, "_");
+    $("#author").text(r.author.replace(/\+/g, " "));
     $("#title").text(title);
 
     $("tbody", $results).children().remove();
@@ -217,7 +218,7 @@ function showResults(r) {
         $.each(r.adaptive_fmts, function(i, v) {
             var tr = $("<tr></tr>");
             if (v.hasOwnProperty("itag")) {
-                var itext = itagToText[v.itag];
+                var itext = itagToText[v.itag] || "Unknown (" + v.itag + ")";
                 $("<td><a download='" + title + "-" + itext.replace(/\//g, "-")
                     + "' href='" + v.url + "'>" + itext + "</a></td>").appendTo(tr);
 
@@ -248,9 +249,18 @@ function showResults(r) {
 }
 
 function fetchInfos(e) {
-    $().add($fetchbutton).add($videoinput).add($error).add($results).slideUp("fast");
+    e.preventDefault();
+    $().add($error).add($results).slideUp("fast");
 
-    var url = $videoinput.val();
+    var url = $videoinput.val().trim();
+
+    if (url == "") {
+        return;
+    }
+    else {
+        $().add($fetchbutton).add($videoinput).slideUp("fast");
+    }
+
     var id;
     if (url.match(/^[A-Za-z0-9_-]{11}$/)) {
         id = url;
@@ -287,6 +297,8 @@ function fetchInfos(e) {
             // this won't ever happen because we're tricking jsonproxy
         }
     });
+
+    return false;
 }
 
 $(function() {
@@ -296,7 +308,7 @@ $(function() {
     $error = $("#error");
     $results = $("#results");
 
-    $fetchbutton.bind("click", fetchInfos);
+    $("form").submit(fetchInfos);
 
     setInterval(updateLoading, 300);
 });

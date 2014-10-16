@@ -45,7 +45,14 @@ button {
 #cell {
     display: table-cell;
     vertical-align: middle;
+    text-align: center;
     width: 100%;
+}
+
+#cell small {
+    position: relative;
+    top: 5px;
+    color: #777;
 }
 
 
@@ -55,7 +62,6 @@ button {
     box-shadow: 0px 5px 30px rgba(0,0,0,0.1);
     padding: 0;
     overflow: hidden;
-    text-align: center;
 }
 
 #content {
