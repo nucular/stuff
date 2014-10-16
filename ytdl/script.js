@@ -14,7 +14,20 @@ loadingtexts = [
     "The server is powered by a lemon and two electrodes",
     "It's still faster than YOU could draw it",
     "Press Alt+F4 for a quick IQ test",
-    "Time is an illusion. Loading time doubly so"
+    "Time is an illusion. Loading time doubly so",
+    "Reticulating Splines",
+    "Press play on tape",
+    "Are we there yet?",
+    "Insert quarter",
+    "99 bottles of beer on the wall",
+    "Measuring the cable length to fetch your data",
+    "Downloading useless random data",
+    "Busylooping",
+    "The gods contemplate your fate",
+    "Waiting for the system admin to hit enter",
+    "Paging for the system admin",
+    "Doing something useful",
+    ""
 ];
 
 var itagToText = {
