@@ -266,11 +266,8 @@ function showResults(r) {
     $().add($fetchbutton).add($videoinput).add($results).slideDown("slow");
 }
 
-function fetchInfos(e) {
-    e.preventDefault();
+function fetchInfos(url) {
     $().add($error).add($results).slideUp("fast");
-
-    var url = $videoinput.val().trim();
 
     if (url == "") {
         return;
@@ -290,10 +287,12 @@ function fetchInfos(e) {
         }
         else {
             $error.text("Invalid URL or ID!");
+            document.location.hash = "";
             $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
             return;
         }
     }
+    document.location.hash = id;
 
     loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
     loadingstate = 0;
@@ -326,7 +325,7 @@ $(function() {
     $error = $("#error");
     $results = $("#results");
 
-    if (window.top.location != window.location) {
+    if (window.top.location != document.location) {
         // break out of the freenom frame
         $("#content").children().css("display", "none");
         $("#content h1").text("Loading...").css("display", "block");
@@ -336,9 +335,21 @@ $(function() {
         $loading.slideDown("slow");
 
         window.top.location.href = document.location.href;
+        return;
     }
 
-    $("form").submit(fetchInfos);
+    var hash = document.location.hash.trim();
+    if (hash != "") {
+        hash = hash.substring(1);
+        $videoinput.val(hash);
+        fetchInfos(hash);
+    }
+
+    $("form").submit(function(e) {
+        e.preventDefault();
+        var url = $videoinput.val().trim();
+        fetchInfos(url);
+    });
 
     setInterval(updateLoading, 300);
 });
