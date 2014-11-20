@@ -255,7 +255,7 @@ function showResults(r) {
     }
 
     if (r.hasOwnProperty("thumbnail_url")) {
-    	$("#thumbnail").attr("src", r.thumbnail_url);
+        $("#thumbnail").attr("src", r.thumbnail_url);
     }
 
     $().add($fetchbutton).add($videoinput).add($results).slideDown("slow");
@@ -320,6 +320,18 @@ $(function() {
     $loading = $("#loading");
     $error = $("#error");
     $results = $("#results");
+
+    if (window.top.location != window.location) {
+        // break out of the freenom frame
+        $("#content").children().css("display", "none");
+        $("#content h1").text("Loading...").css("display", "block");
+
+        loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
+        loadingstate = 0;
+        $loading.slideDown("slow");
+
+        window.top.location.href = document.location.href;
+    }
 
     $("form").submit(fetchInfos);
 
