@@ -200,9 +200,10 @@ function showResults(r) {
         return;
     }
 
-    var title = r.title.replace(/\+/g, " ").replace(/'/g, "_");
-    $("#author").text(r.author.replace(/\+/g, " "));
-    $("#title").text(title);
+    var author = r.author.replace(/\+{3}/g, " &plus; ").replace(/\+/g, " ");
+    var title = r.title.replace(/\+{3}/g, " &plus; ").replace(/\+/g, " ");
+    $("#author").html(author);
+    $("#title").html(title);
 
     $("tbody", $results).children().remove();
     if (r.hasOwnProperty("fmts")) {
@@ -210,7 +211,8 @@ function showResults(r) {
             var tr = $("<tr></tr>");
             if (v.hasOwnProperty("itag")) {
                 var itext = itagToText[v.itag];
-                $("<td><a download='" + title + "-" + itext.replace(/\//g, "-")
+                $("<td><a download='" + title.replace(/[^\w\(\)\- ]+/g, "_")
+                    + " " + itext.replace(/\//g, "-")
                     + "' href='" + v.url + "'>" + itext + "</a></td>").appendTo(tr);
 
                 if (v.hasOwnProperty("quality"))
@@ -256,7 +258,10 @@ function showResults(r) {
 
     if (r.hasOwnProperty("thumbnail_url")) {
         $("#thumbnail").attr("src", r.thumbnail_url);
+    } else {
+        $("#thumbnail").attr("src", "http://www.userlogos.org/files/logos/48083_szop_gracz/yt_logo2.png");
     }
+    $("#vidlink").attr("href", "https://www.youtube.com/watch?v=" + r.video_id)
 
     $().add($fetchbutton).add($videoinput).add($results).slideDown("slow");
 }
