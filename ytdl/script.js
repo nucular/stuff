@@ -334,7 +334,8 @@ $(function() {
         loadingstate = 0;
         $loading.slideDown("slow");
 
-        window.top.location.href = document.location.href;
+        window.top.location.href = document.location.href.replace(document.location.hash, "")
+            + (window.top.location.hash || document.location.hash);
         return;
     }
 
