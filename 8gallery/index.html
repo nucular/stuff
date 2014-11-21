@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>8gallery</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic&amp;subset=latin-ext">
+    <link rel="stylesheet" href="magnific-popup.css">
+
+    <link rel="stylesheet" href="style.css"/>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="jsonproxy.js"></script>
+    <script src="script.js"></script>
+    <script src="magnific-popup.min.js"></script>
+</head>
+<body>
+    <div id="load-popup" class="mfp-hide">
+        <form id="load-form">
+            <input id="load-input" placeholder="Enter an 8chan thread URL"></input>
+            <button type="submit" id="load-submit">Load</button>
+        </form>
+    </div>
+    <div id="load-button" data-mfp-src="#load-popup">
+        <img src="logo.svg"/>
+    </div>
+    <h1 id="subject"></h1>
+    <div id="gallery">
+        <span>Click on the button to open a thread</span>
+    </div>
+</body>
+</html>
