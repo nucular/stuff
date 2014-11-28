@@ -1,4 +1,4 @@
-// From http://stackoverflow.hewgill.com/questions/182/112.html for the lulz
+// From http://stackoverflow.hewgill.com/questions/182/112.html
 loadingtexts = [
     "Spinning up the hamster",
     "Shovelling coal into the server",
@@ -27,14 +27,16 @@ loadingtexts = [
     "Waiting for the system admin to hit enter",
     "Paging for the system admin",
     "Doing something useful",
-    ""
+    "."
 ];
 
 var itagToText = {
     0:   "dash",
+    299: "1080p/mp4v",
+    298: "720p/mp4v",
     272: "hires/webm",
     271: "1440p/webm",
-    264: "1440p/mp4v", //hires
+    264: "1440p/mp4v", // hires
     248: "1080p/webm",
     247: "720p/webm",
     246: "480p/webm",
@@ -77,7 +79,7 @@ var itagToText = {
     5  : "240p/flv",
     36 : "180p/3gpp",
     17 : "144p/3gpp",
-    // last, just in case "4k" video crashes graphics card"s driver
+    // last, just in case 4k video crashes graphics cards driver
     38 : "highres/mp4", //1440p variable?
     //4? : "highres/webm"
 
@@ -106,6 +108,26 @@ var itagToText = {
 String.prototype.repeat = function( num )
 {
     return new Array( num + 1 ).join( this );
+}
+
+function getTypeExt(type, def) {
+    var container = type.split(";");
+    if (container && container[0]) {
+        switch (container[0]) {
+            case "video/mp4": return ".mp4"; break;
+            case "audio/mp4": return ".m4a"; break;
+
+            case "video/webm": return ".webm"; break;
+            case "audio/webm": return ".weba"; break;
+
+            case "video/x-flv": return ".flv"; break;
+            case "video/3gpp": return ".3gp"; break;
+
+            default: return (def || ""); break;
+        }
+    } else {
+        return (def || "");
+    }
 }
 
 function updateLoading() {
@@ -150,17 +172,22 @@ function processInfos(t) {
         afmts = parse_qsl(afmts, "&,");
         var parsed_afmts = [];
         var current = {};
+        var startmarker = afmts[0][0];
         $.each(afmts, function(k, v) {
-            if (v[0] == "url") {
+            if (v[0] == startmarker) {
                 if (current.hasOwnProperty("url")) {
                     parsed_afmts.push(current);
                 }
-                current = {url: v[1]}
+                current = {};
+                current[startmarker] = v[1];
             }
             else {
                 current[v[0]] = v[1];
             }
         });
+        if (current.hasOwnProperty("url")) {
+            parsed_afmts.push(current);
+        }
         parsed.adaptive_fmts = parsed_afmts;
     }
 
@@ -169,17 +196,22 @@ function processInfos(t) {
         fmtmap = parse_qsl(fmtmap, "&,");
         var parsed_fmts = [];
         var current = {};
+        var startmarker = fmtmap[0][0];
         $.each(fmtmap, function(k, v) {
-            if (v[0] == "itag") {
+            if (v[0] == startmarker) {
                 if (current.hasOwnProperty("url")) {
                     parsed_fmts.push(current);
                 }
-                current = {itag: v[1]}
+                current = {};
+                current[startmarker] = v[1];
             }
             else {
                 current[v[0]] = v[1];
             }
         });
+        if (current.hasOwnProperty("url")) {
+            parsed_afmts.push(current);
+        }
         parsed.url_encoded_fmt_stream_map = undefined;
         parsed.fmts = parsed_fmts;
     }
@@ -202,59 +234,95 @@ function showResults(r) {
 
     var author = r.author.replace(/\+{3}/g, " &plus; ").replace(/\+/g, " ");
     var title = r.title.replace(/\+{3}/g, " &plus; ").replace(/\+/g, " ");
+
+    var saneauthor = author.replace(/[^\w\(\)\- ]+/g, "");
+    var sanetitle = title.replace(/[^\w\(\)\- ]+/g, "");
+
     $("#author").html(author);
     $("#title").html(title);
 
     $("tbody", $results).children().remove();
     if (r.hasOwnProperty("fmts")) {
         $.each(r.fmts, function(i, v) {
-            var tr = $("<tr></tr>");
             if (v.hasOwnProperty("itag")) {
-                var itext = itagToText[v.itag];
-                $("<td><a download='" + title.replace(/[^\w\(\)\- ]+/g, "_")
-                    + " " + itext.replace(/\//g, "-")
-                    + "' href='" + v.url + "'>" + itext + "</a></td>").appendTo(tr);
+                var tr = $("<tr></tr>");
+
+                var itext = itagToText[v.itag] || "Unknown (" + v.itag + ")";
+                var saneitext = (itagToText[v.itag] || v.itag.toString()).replace(/\//g, "-");
+                var type = v.type || "";
+                var sanetype = type.replace(";", " ")
+                    .replace("+codecs=", "(")
+                    .replace(/\"/g, "")
+                    .replace(/\,/g, ", ") + ((type.indexOf("+codecs=") != -1) ? ")" : "");
+
+                var filename = sanetitle + " (" + saneitext + ")" + getTypeExt(type || "");
+                var td = $("<td></td>").appendTo(tr);
+                $("<a class=\"dl-link\"></a>")
+                    .text(itext)
+                    .attr("href", v.url)
+                    .attr("download", filename)
+                    .appendTo(td);
 
                 if (v.hasOwnProperty("quality"))
-                    $("<td>" + v.quality + "</td>").appendTo(tr);
+                    $("<td></td>").text(v.quality).appendTo(tr);
                 else
-                    $("<td></td>").appendTo(tr);
+                    $("<td>n/a</td>").appendTo(tr);
 
                 if (v.hasOwnProperty("type"))
-                    $("<td>" + v.type.replace(";", " ").replace("+codecs=", " ") + "</td>").appendTo(tr);
+                    $("<td></td>").text(sanetype).appendTo(tr);
                 else
-                    $("<td></td>").appendTo(tr);
+                    $("<td>n/a</td>").appendTo(tr);
+
+                tr.appendTo("#fmts>tbody");
             }
-            tr.appendTo("#fmts>tbody");
         });
     }
 
     if (r.hasOwnProperty("adaptive_fmts")) {
         $.each(r.adaptive_fmts, function(i, v) {
-            var tr = $("<tr></tr>");
             if (v.hasOwnProperty("itag")) {
+                var tr = $("<tr></tr>");
+
                 var itext = itagToText[v.itag] || "Unknown (" + v.itag + ")";
-                $("<td><a download='" + title + "-" + itext.replace(/\//g, "-")
-                    + "' href='" + v.url + "'>" + itext + "</a></td>").appendTo(tr);
+                var saneitext = (itagToText[v.itag] || v.itag.toString()).replace(/\//g, "-");
+                var type = v.type || "";
+                var sanetype = v.type.replace(";", " ")
+                    .replace("+codecs=", "(")
+                    .replace(/\"/g, "")
+                    .replace(/\,/g, ", ") + ((type.indexOf("+codecs=") != -1) ? ")" : "");
+
+                var filename = sanetitle + " (" + saneitext + ")" + getTypeExt(type || "");
+                var td = $("<td></td>").appendTo(tr);
+                $("<a class=\"dl-link\"></a>")
+                    .text(itext)
+                    .attr("href", v.url)
+                    .attr("download", filename)
+                    .appendTo(td);
 
                 if (v.hasOwnProperty("size"))
-                    $("<td>" + v.size + "</td>").appendTo(tr);
+                    $("<td></td>").text(v.size).appendTo(tr);
                 else
-                    $("<td></td>").appendTo(tr);
+                    $("<td>n/a</td>").appendTo(tr);
 
                 if (v.hasOwnProperty("type"))
-                    $("<td>" + v.type.replace(";", " ").replace("+codecs=", " ") + "</td>").appendTo(tr);
+                    $("<td></td>").text(sanetype).appendTo(tr);
                 else
-                    $("<td></td>").appendTo(tr);
+                    $("<td>n/a</td>").appendTo(tr);
 
                 if (v.hasOwnProperty("fps"))
-                    $("<td>" + v.fps + "</td>").appendTo(tr);
+                    $("<td></td>").text(v.fps).appendTo(tr);
                 else
-                    $("<td></td>").appendTo(tr);
+                    $("<td>n/a</td>").appendTo(tr);
+
+                tr.appendTo("#afmts>tbody");
             }
-            tr.appendTo("#afmts>tbody");
         });
     }
+
+    $(".dl-link").click(function(e) {
+        e.preventDefault();
+        $("#dl-hint").stop(true).fadeOut("fast").fadeIn("fast").fadeOut("fast").fadeIn("fast");
+    })
 
     if (r.hasOwnProperty("thumbnail_url")) {
         $("#thumbnail").attr("src", r.thumbnail_url);
@@ -299,19 +367,15 @@ function fetchInfos(url) {
     $loading.slideDown("slow");
     $.jsonp({
         url: "https://youtube.com/get_video_info?video_id=" + id,
-        dataType: "json",
+        dataType: "text",
         error: function(xhr, ts, e) {
-            if (xhr.status != 502) {
-                $loading.slideUp("fast");
-                $error.text(e);
-                $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
-            } else {
-                var p = processInfos(xhr.responseJSON.error);
-                showResults(p);
-            }
+            $loading.slideUp("fast");
+            $error.text(e);
+            $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
         },
         success: function(data, ts, xhr) {
-            // this won't ever happen because we're tricking jsonproxy
+            var p = processInfos(data);
+            showResults(p);
         }
     });
 
@@ -324,20 +388,6 @@ $(function() {
     $loading = $("#loading");
     $error = $("#error");
     $results = $("#results");
-
-    if (window.top.location != document.location) {
-        // break out of the freenom frame
-        $("#content").children().css("display", "none");
-        $("#content h1").text("Loading...").css("display", "block");
-
-        loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
-        loadingstate = 0;
-        $loading.slideDown("slow");
-
-        window.top.location.href = document.location.href.replace(document.location.hash, "")
-            + (window.top.location.hash || document.location.hash);
-        return;
-    }
 
     var hash = document.location.hash.trim();
     if (hash != "") {
