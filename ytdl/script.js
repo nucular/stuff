@@ -338,11 +338,11 @@ function fetchInfos(url) {
     $().add($error).add($results).slideUp("fast");
 
     if (url == "") {
+        document.location.hash = "";
+        $("#shortlink").attr("href", "http://ytdl.ga").text("ytdl.ga#[Video URL]");
         return;
     }
-    else {
-        $().add($fetchbutton).add($videoinput).slideUp("fast");
-    }
+    $().add($fetchbutton).add($videoinput).slideUp("fast");
 
     var id;
     if (url.match(/^[A-Za-z0-9_-]{11}$/)) {
@@ -356,11 +356,13 @@ function fetchInfos(url) {
         else {
             $error.text("Invalid URL or ID!");
             document.location.hash = "";
+            $("#shortlink").attr("href", "http://ytdl.ga").text("ytdl.ga#[Video URL]");
             $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
             return;
         }
     }
     document.location.hash = id;
+    $("#shortlink").attr("href", "http://ytdl.ga#" + id).text("ytdl.ga#" + id);
 
     loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
     loadingstate = 0;
