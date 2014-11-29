@@ -27,7 +27,7 @@ loadingtexts = [
     "Waiting for the system admin to hit enter",
     "Paging for the system admin",
     "Doing something useful",
-    "."
+    ""
 ];
 
 var itagToText = {
