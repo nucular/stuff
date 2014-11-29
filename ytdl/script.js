@@ -132,13 +132,8 @@ function getTypeExt(type, def) {
 
 function updateLoading() {
     if ($loading.is(":visible") ) {
-        loadingstate++;
-        if (loadingstate >= 12 + 4 * Math.floor(Math.random() * 10)) {
-            loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
-            loadingstate = 0;
-        }
-
-        $loading.text(loadingtext + ".".repeat(loadingstate % 4));
+        $("#loading>span").first()
+            .text(loadingtexts[Math.floor(Math.random() * loadingtexts.length)]);
     }
 }
 
@@ -413,5 +408,5 @@ $(function() {
         fetchInfos(url);
     });
 
-    setInterval(updateLoading, 300);
+    setInterval(updateLoading, 4000);
 });

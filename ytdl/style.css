@@ -3,6 +3,7 @@ html, body {
     background-color: #f8f8f8;
 
     font-family: 'Source Sans Pro', sans-serif;
+    font-size: 15px;
     
     margin: 0;
     width: 100%;
@@ -143,5 +144,68 @@ h1 {
 
     #fetch-button {
         margin-top: 5px;
+    }
+}
+
+.ellipsis {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    width: 12px;
+    margin-left: 0px;
+    margin-right: 0px;
+    animation: ellipsis 2s infinite;
+    -webkit-animation: ellipsis 2s infinite;
+    -moz-animation: ellipsis 2s infinite;
+}
+@keyframes ellipsis {
+    0% {
+        width: 0px;
+        margin-right: 12px;
+        margin-left: 0px;
+    }
+    70% {
+        width: 12px;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    100% {
+        width: 0px;
+        margin-right: 0px;
+        margin-left: 12px;
+    }
+}
+@-webkit-keyframes ellipsis {
+    0% {
+        width: 0px;
+        margin-right: 12px;
+        margin-left: 0px;
+    }
+    70% {
+        width: 12px;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    100% {
+        width: 0px;
+        margin-right: 0px;
+        margin-left: 12px;
+    }
+}
+@-moz-keyframes ellipsis {
+    0% {
+        width: 0px;
+        margin-right: 12px;
+        margin-left: 0px;
+    }
+    70% {
+        width: 12px;
+        margin-right: 0px;
+        margin-left: 0px;
+    }
+    100% {
+        width: 0px;
+        margin-right: 0px;
+        margin-left: 12px;
     }
 }
