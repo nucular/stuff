@@ -168,22 +168,26 @@ function processInfos(t) {
     var parsed = parse_qs(t, "&");
 
     if (parsed.hasOwnProperty("adaptive_fmts")) {
+        console.log("=== afmts ===");
+
         var afmts = parsed.adaptive_fmts;
         afmts = parse_qsl(afmts, "&,");
         var parsed_afmts = [];
         var current = {};
         var startmarker = afmts[0][0];
         $.each(afmts, function(k, v) {
-            if (v[0] == startmarker) {
+            if (k != 0 && v[0] == startmarker) {
                 if (current.hasOwnProperty("url")) {
                     parsed_afmts.push(current);
                 }
                 current = {};
                 current[startmarker] = v[1];
+                console.log("---");
             }
-            else {
+            else { 
                 current[v[0]] = v[1];
             }
+            console.log(v[0], v[1]);
         });
         if (current.hasOwnProperty("url")) {
             parsed_afmts.push(current);
@@ -192,25 +196,30 @@ function processInfos(t) {
     }
 
     if (parsed.hasOwnProperty("url_encoded_fmt_stream_map")) {
+        console.log("");
+        console.log("=== fmts ===");
+
         var fmtmap = parsed.url_encoded_fmt_stream_map;
         fmtmap = parse_qsl(fmtmap, "&,");
         var parsed_fmts = [];
         var current = {};
         var startmarker = fmtmap[0][0];
         $.each(fmtmap, function(k, v) {
-            if (v[0] == startmarker) {
+            if (k != 0 && v[0] == startmarker) {
                 if (current.hasOwnProperty("url")) {
                     parsed_fmts.push(current);
                 }
                 current = {};
                 current[startmarker] = v[1];
+                console.log("---");
             }
             else {
                 current[v[0]] = v[1];
             }
+            console.log(v[0], v[1]);
         });
         if (current.hasOwnProperty("url")) {
-            parsed_afmts.push(current);
+            parsed_fmts.push(current);
         }
         parsed.url_encoded_fmt_stream_map = undefined;
         parsed.fmts = parsed_fmts;
