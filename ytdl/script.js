@@ -1,35 +1,3 @@
-// From http://stackoverflow.hewgill.com/questions/182/112.html
-loadingtexts = [
-    "Spinning up the hamster",
-    "Shovelling coal into the server",
-    "Programming the flux capacitor",
-    "The architects are still drafting",
-    "The bits are breeding",
-    "We're building the buildings as fast as we can",
-    "Pay no attention to the man behind the curtain",
-    "Enjoy the elevator music",
-    "A few bits tried to escape, but we caught them",
-    "Go ahead -- hold your breath",
-    "Hum something loud while others stare",
-    "The server is powered by a lemon and two electrodes",
-    "It's still faster than YOU could draw it",
-    "Press Alt+F4 for a quick IQ test",
-    "Time is an illusion. Loading time doubly so",
-    "Reticulating Splines",
-    "Press play on tape",
-    "Are we there yet?",
-    "Insert quarter",
-    "99 bottles of beer on the wall",
-    "Measuring the cable length to fetch your data",
-    "Downloading useless random data",
-    "Busylooping",
-    "The gods contemplate your fate",
-    "Waiting for the system admin to hit enter",
-    "Paging for the system admin",
-    "Doing something useful",
-    ""
-];
-
 var itagToText = {
     0:   "dash",
     299: "1080p/mp4v",
@@ -132,8 +100,7 @@ function getTypeExt(type, def) {
 
 function updateLoading() {
     if ($loading.is(":visible") ) {
-        $("#loading>span").first()
-            .text(loadingtexts[Math.floor(Math.random() * loadingtexts.length)]);
+        $("#loading>span").first().text(loadmsg.generate());
     }
 }
 
@@ -368,9 +335,8 @@ function fetchInfos(url) {
     document.location.hash = id;
     $("#shortlink").attr("href", "http://ytdl.ga#" + id).text("ytdl.ga#" + id);
 
-    loadingtext = loadingtexts[Math.floor(Math.random() * loadingtexts.length)];
-    loadingstate = 0;
     $loading.slideDown("slow");
+    updateLoading();
     $.jsonp({
         url: "https://youtube.com/get_video_info?video_id=" + id,
         dataType: "text",
