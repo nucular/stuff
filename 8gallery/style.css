@@ -1,5 +1,5 @@
 html, body {
-    background-color: #111;
+    background-color: #0d0d0d;
     color: #eee;
 
     margin-left: 0;
@@ -48,19 +48,25 @@ button {
 }
 
 hr {
-    border: 1px solid #222;
+    border: 1px solid #121212;
     border-bottom: none;
     margin: 0px;
     position: relative;
     left: -8px;
 }
 
+#footer {
+    color: #888;
+}
+
 #gallery {
     font-size: 0;
     display: block;
     width: calc(100% - 16px);
+    height: 100%;
     margin-right: 0px;
     margin-left: 16px;
+    margin-bottom: 20px;
 }
 
 .gthumb {
@@ -88,7 +94,7 @@ hr {
     height: 100%;
 }
 
-#load-popup {
+#load-container {
     position: relative;
     background: #222;
     padding: 20px;
@@ -96,16 +102,28 @@ hr {
     max-width: 500px;
     margin: 20px auto;
 }
-#load-popup .mfp-close {
-    color: #eee;
-}
 
 #load-input {
-    width: calc(100% - 100px);
+    width: 80%;
 }
 
 #load-submit {
     width: 50px;
-    float: right;
-    margin-right: 25px;
+    margin: 5px 0px 0px 10px;
+}
+
+#loader, #error {
+    display: none;
+}
+
+#error {
+    color: #f33;
+}
+
+.swipebox-video-container {
+    padding: 0% !important;
+}
+
+.swipebox-video-html5 {
+    max-width: 100%;
 }
