@@ -24,3 +24,7 @@
     margin: 0;
     float: left;
 }
+
+#form, #back {
+	display: none;
+}
