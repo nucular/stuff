@@ -1,0 +1,26 @@
+.image {
+	width: 119px;
+	height: 278px;
+
+    background-repeat: no-repeat;
+}
+
+.i1 {
+	float: left;
+	background-position: -1px -1px;
+}
+
+.i2 {
+	float: right;
+	background-position: -611px -1px;
+}
+
+.panel {
+	width: 238px;
+	height: 278px;
+	margin: 0;
+
+	padding:0;
+    margin:0;
+    float: left;
+}
