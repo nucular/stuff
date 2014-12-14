@@ -28,6 +28,27 @@ function parseSearch() {
     return result;
 }
 
+var NonRepeatingRandom = function(length) {
+    this.length = length || Infinity;
+    this.history = [];
+
+    this.transform = function(n) {
+        return n;
+    }
+
+    this.get = function() {
+        var rnd = this.transform(Math.random());
+        while (this.history.indexOf(rnd) != -1)
+            rnd = this.transform(Math.random());
+
+        this.history.push(rnd);
+        while (this.history.length > this.length)
+            this.history.shift();
+
+        return rnd;
+    }
+}
+
 $(function() {
     var search = parseSearch();
 
@@ -62,12 +83,17 @@ $(function() {
 
     } else if (search.gen) {
         var gen = parseInt(search.gen);
+        var rand = new NonRepeatingRandom();
+        rand.transform = function(n) {return Math.floor(n * IDS.length)};
+
         if (!isNaN(gen)) {
             var generated = "";
+
             for (var i = 0; i < gen; i++) {
-                var id = IDS[Math.floor(Math.random() * IDS.length)];
+                var id = IDS[rand.get()];
                 generated += id;
             }
+
             document.location.search = "?comic=" + generated;
         }
     } else {
