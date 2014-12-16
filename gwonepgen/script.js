@@ -276,7 +276,7 @@ $(function(e) {
                 var m2 = document.location.hash.match(/#\/([\w\-\+]+)\/([\w\-\+]+)/);
                 if (m2) {
                     $("input[name=comment-subs]").val(m2[1]);
-                    $("input[name=image-subs]").val(m2[5]);
+                    $("input[name=image-subs]").val(m2[2]);
                     var comment_subs = m2[1].split("+");
                     var image_subs = m2[2].split("+");
                     generate(comment_subs, image_subs);
