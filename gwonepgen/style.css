@@ -1,0 +1,117 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: black;
+}
+
+#header h1 {
+	font-weight: normal;
+    font-family: "Raleway", sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#wrapper {
+	display: block;
+	padding: 10px;
+	text-align: center;
+}
+
+#wrapper form {
+	display: inline-block;
+	text-align: right;
+}
+
+button, input[type=submit], input[type=text] {
+	background-color: white;
+	border: 1px solid black;
+	color: black;
+	margin: 3px;
+	padding: 3px;
+}
+
+.muted {
+	color: #444;
+	font-size: 90%;
+}
+
+#result {
+	display: none;
+	position: absolute;
+	top: 0; left: 0; bottom: 0; right: 0;
+
+	background-size: cover;
+}
+
+#comment {
+	display: none;
+	z-index: 99;
+
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	/*background-color: rgba(255, 255, 255, 0.3);*/
+	padding-top: 10px; padding-bottom: 10px;
+}
+
+#author {
+	font-family: "Raleway", sans-serif;
+	font-weight: bold;
+	font-size: 17pt;
+
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+
+.spinner {
+	z-index: 9999;
+	height: 5px;
+	width: 100%;
+	position: relative;
+	overflow: hidden;
+	display: none;
+}
+
+.inner.spinner {
+    display: block;
+    height: 5px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: -25%;
+    background-color: black;
+    -webkit-animation: 2s spinner infinite cubic-bezier(0.52, 0, 0.48, 1);
+    animation: 2s spinner infinite cubic-bezier(0.52, 0, 0.48, 1);
+}
+
+@-webkit-keyframes spinner {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 0%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        left: -100%;
+    }
+
+    50% {
+        left: 0%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
