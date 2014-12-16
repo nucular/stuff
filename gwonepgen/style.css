@@ -5,6 +5,10 @@ body {
 	color: black;
 }
 
+a {
+	text-decoration: none;
+}
+
 #header h1 {
 	font-weight: normal;
     font-family: "Raleway", sans-serif;
@@ -65,6 +69,24 @@ button, input[type=submit], input[type=text] {
 	position: absolute;
 	bottom: 10px;
 	left: 10px;
+}
+
+#perma {
+	z-index: 100;
+
+	font-size: 10px;
+	color: #fff;
+	opacity: 0.5;
+
+	position: absolute;
+	bottom: 0px; right: 0px;
+	padding: 3px;
+
+	transition: opacity 0.1s ease-in;
+}
+
+#perma:hover {
+	opacity: 1;
 }
 
 .spinner {

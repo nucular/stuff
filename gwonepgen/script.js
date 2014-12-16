@@ -21,6 +21,8 @@ var SHADOW = [
 
 var state = "start";
 var oldhash = "";
+var comment_perma = [];
+var image_perma = [];
 
 var decodeEntities = (function () {
     //create a new html document (doesn't execute script tags in child elements)
@@ -59,6 +61,9 @@ function setState(newstate) {
         $("#comment").fadeOut("slow");
         $("#result").fadeOut("fast");
     }
+    if (newstate == "done" && state != "done") {
+        updatePerma();
+    }
     if (state == "start" && newstate != "start") {
         $("#wrapper").fadeOut();
     }
@@ -94,12 +99,36 @@ function randomComment(subs, success, error) {
                 randomComment(subs, success, error);
             } else {
                 var comment = choice(comments).data;
-                var permalink = "http://reddit.com"
-                    + data[0].data.children[0].data.permalink
-                    + comment.id;;
-                success(shortenComment(decodeEntities(comment.body_html)),
-                    comment.author, permalink);
+
+                var postperma = data[0].data.children[0].data.permalink;
+                var m = postperma.match(/\/r\/([\w\-]+)\/comments\/(\w+)\/([\w\-]+)\//);
+                comment_perma = m.slice(1, 4).concat([comment.id]);
+
+                success(
+                    shortenComment(decodeEntities(comment.body_html)),
+                    comment.author,
+                    "http://reddit.com" + postperma + comment.id
+                );
             }
+        }
+    });
+}
+
+function permaComment(url, success, error) {
+    $.jsonp({
+        url: url + "/.json?limit=1",
+        dataType: "json",
+        error: error,
+        success: function(data, xhr, ts) {
+            if (state != "loading") return;
+
+            var comment = data[1].data.children[0].data;
+            var postperma = data[0].data.children[0].data.permalink;
+            success(
+                shortenComment(decodeEntities(comment.body_html)),
+                comment.author,
+                "http://reddit.com" + postperma + comment.id
+            );
         }
     });
 }
@@ -122,16 +151,46 @@ function randomImage(subs, success, error) {
                 randomImage(subs, success, error);
             } else {
                 var url = "http://i.imgur.com/" + m[1] + ".jpg";
+
+                var postperma = data[0].data.children[0].data.permalink;
+                var m = postperma.match(/\/r\/([\w\-]+)\/comments\/(\w+)\/([\w\-]+)\//);
+                image_perma = m.slice(1, 3);
+
                 success(url);
             }
         }
     });
 }
 
-function generate(comment_subs, image_subs) {
-    var comment_subs = comment_subs || $("input[name=comment-subs]").val().split("+");
-    var image_subs = image_subs || $("input[name=image-subs]").val().split("+");
+function permaImage(url, success, error) {
+    $.jsonp({
+        url: url + "/.json?limit=0",
+        dataType: "json",
+        error: error,
+        success: function(data, xhr, ts) {
+            if (state != "loading") return;
 
+            var post = data[0].data.children[0].data;
+            var m = post.url.match(/imgur\.com\/(\w{7}|\w{5})(?:\.\w+)?$/);
+
+            if (m) {
+                var url = "http://i.imgur.com/" + m[1] + ".jpg";
+                success(url);
+            } else {
+                error();
+            }
+        }
+    });
+}
+
+function updatePerma() {
+    var permalink = document.location.protocol + "//" + document.location.hostname
+        + (document.location.port ? ":" + document.location.port : "") + document.location.pathname
+        + "#/perma/" + comment_perma.join("%2F") + "/" + image_perma.join("%2F");
+    $("#perma").text(permalink).attr("href", permalink);
+}
+
+function generate(comment_subs, image_subs) {
     setState("loading");
 
     randomComment(comment_subs, function(text, author, permalink) {
@@ -142,14 +201,15 @@ function generate(comment_subs, image_subs) {
             .css("font-family", choice(FONTS))
             .css("font-size", (7 + Math.random() * 3).toString() + "vmin")
             .css("top", Math.floor(Math.random() * 80).toString() + "%")
+            .attr("href", permalink)
             .text(text)
-            .fadeIn()
-            .click(function() {open(permalink)});
+            .fadeIn();
 
         var colid = Math.floor(Math.random() * COLORS.length);
         $("#author")
             .css("color", COLORS[colid])
             .css("text-shadow", "0px 0px 4px " + SHADOW[colid])
+            .attr("href", "http://reddit.com/u/" + author)
             .text("/u/" + author);
 
         if ($("#result").is(":visible")) setState("done");
@@ -162,18 +222,65 @@ function generate(comment_subs, image_subs) {
     });
 }
 
+function perma(comment_link, image_link) {
+    setState("loading");
+
+    permaComment(comment_link, function(text, author, permalink) {
+        var colid = Math.floor(Math.random() * COLORS.length);
+        $("#comment")
+            .css("color", COLORS[colid])
+            .css("text-shadow", "0px 0px 4px " + SHADOW[colid])
+            .css("font-family", choice(FONTS))
+            .css("font-size", (7 + Math.random() * 3).toString() + "vmin")
+            .css("top", Math.floor(Math.random() * 80).toString() + "%")
+            .attr("href", permalink)
+            .text(text)
+            .fadeIn();
+
+        var colid = Math.floor(Math.random() * COLORS.length);
+        $("#author")
+            .css("color", COLORS[colid])
+            .css("text-shadow", "0px 0px 4px " + SHADOW[colid])
+            .attr("href", "http://reddit.com/u/" + author)
+            .text("/u/" + author);
+
+        if ($("#result").is(":visible")) setState("done");
+    });
+    permaImage(image_link, function(url) {
+        $("#result")
+            .css("background-image", "url(" + url + ")")
+            .fadeIn();
+        if ($("#comment").is(":visible")) setState("done");
+    });
+}
+
 $(function(e) {
     // link sharing and stuff
     setInterval(function() {
         if (document.location.hash != oldhash) {
             oldhash = document.location.hash;
-            var m = document.location.hash.match(/#\/([\w\-]+)\/([\w\-]+)/);
+            var m = document.location.hash.match(/#\/perma\/([\w\-]+)%2F(\w+)%2F([\w\-]+)%2F(\w+)\/([\w\-]+)%2F(\w+)/);
             if (m) {
-                var comment_subs = m[1].split("+");
-                var image_subs = m[2].split("+");
-                generate(comment_subs, image_subs);
+                var comment_link = "http://reddit.com/r/" + m[1] + "/comments/" + m[2] + "/" + m[3] + "/" + m[4];
+                var image_link = "http://reddit.com/r/" + m[5] + "/comments/" + m[6];
+                comment_perma = m.slice(1, 5);
+                image_perma = m.slice(5, 7);
+
+                document.location.hash = "#/" + m[1] + "/" + m[5];
+                oldhash = document.location.hash;
+                $("input[name=comment-subs]").val(m[1]);
+                $("input[name=image-subs]").val(m[5]);
+
+                perma(comment_link, image_link);
             } else {
-                setState("start");
+                var m2 = document.location.hash.match(/#\/([\w\-\+]+)\/([\w\-\+]+)/);
+                if (m2) {
+                    var comment_subs = m2[1].split("+");
+                    var image_subs = m2[2].split("+");
+                    generate(comment_subs, image_subs);
+                } else {
+                    setState("start");
+                }
             }
         }
     }, 500);
@@ -188,9 +295,14 @@ $(function(e) {
         var comment_subs = $("input[name=comment-subs]").val();
         var image_subs = $("input[name=image-subs]").val();
         document.location.hash = "#/" + comment_subs + "/" + image_subs;
-        generate(comment_subs.split("+"), image_subs.split("+"));
     });
     $("#result").click(function(e) {
-        generate();
+        generate(
+            $("input[name=comment-subs]").val().split("+"),
+            $("input[name=image-subs]").val().split("+")
+        );
     });
+    $("#perma").click(function(e) {
+        e.stopPropagation();
+    })
 });
