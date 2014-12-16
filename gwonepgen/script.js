@@ -228,7 +228,7 @@ function generate(comment_subs, image_subs) {
             .css("text-shadow", "0px 0px 4px " + SHADOW[colid])
             .css("font-family", choice(FONTS))
             .css("font-size", (7 + Math.random() * 3).toString() + "vmin")
-            .css("top", Math.floor(Math.random() * 80).toString() + "%")
+            .css("top", Math.floor(Math.random() * 70).toString() + "%")
             .attr("href", permalink)
             .text(text)
             .fadeIn();
