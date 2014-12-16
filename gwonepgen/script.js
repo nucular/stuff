@@ -52,6 +52,10 @@ function choice(arr) {
 function setState(newstate) {
     if (state == "loading" && newstate != "loading") {
         $(".spinner").slideUp("fast");
+        if (newstate == "start") {
+            $("#comment").fadeOut("slow");
+            $("#result").fadeOut("fast");
+        }
     }
     if (newstate == "loading" && state != "loading") {
         $(".inner.spinner").css("background-color", choice(COLORS));
@@ -68,6 +72,7 @@ function setState(newstate) {
         $("#wrapper").fadeOut();
     }
     if (newstate == "start" && state != "start") {
+        document.location.hash = "";
         $("#wrapper").fadeIn();
     }
 
@@ -100,7 +105,10 @@ function randomComment(subs, success, error) {
         error: error,
         success: function(data, xhr, ts) {
             if (state != "loading") return;
-            console.log(data);
+            if (data.error || data.data) {
+                error(data.error || data.data);
+                return;
+            }
 
             var comments = data[1].data.children;
             if (comments.length == 0) {
@@ -129,6 +137,10 @@ function permaComment(url, success, error) {
         error: error,
         success: function(data, xhr, ts) {
             if (state != "loading") return;
+            if (data.error || data.data) {
+                error(data.error || data.data);
+                return;
+            }
 
             var comment = data[1].data.children[0].data;
             var postperma = data[0].data.children[0].data.permalink;
@@ -145,12 +157,16 @@ function randomImage(subs, success, error) {
     var sub = choice(subs);
 
     $.jsonp({
-        url: "http://reddit.com/r/" + sub + "/random/.json"
+        url: "http://reddit.com/r/dddd" + sub + "/random/.json"
             + "?_=" + Date.now(),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
             if (state != "loading") return;
+            if (data.error || data.data) {
+                error(data.error || data.data);
+                return;
+            }
 
             var post = data[0].data.children[0].data;
             var m = post.url.match(/imgur\.com\/(\w{7}|\w{5})(?:\.\w+)?$/);
@@ -177,6 +193,10 @@ function permaImage(url, success, error) {
         error: error,
         success: function(data, xhr, ts) {
             if (state != "loading") return;
+            if (data.error || data.data) {
+                error(data.error || data.data);
+                return;
+            }
 
             var post = data[0].data.children[0].data;
             var m = post.url.match(/imgur\.com\/(\w{7}|\w{5})(?:\.\w+)?$/);
@@ -221,13 +241,13 @@ function generate(comment_subs, image_subs) {
             .text("/u/" + author);
 
         if ($("#result").is(":visible")) setState("done");
-    });
+    }, function(e) { setState("start") });
     randomImage(image_subs, function(url) {
         $("#result")
             .css("background-image", "url(" + url + ")")
             .fadeIn();
         if ($("#comment").is(":visible")) setState("done");
-    });
+    }, function(e) { setState("start") });
 }
 
 function perma(comment_link, image_link) {
@@ -253,13 +273,13 @@ function perma(comment_link, image_link) {
             .text("/u/" + author);
 
         if ($("#result").is(":visible")) setState("done");
-    });
+    }, function(e) { setState("start") });
     permaImage(image_link, function(url) {
         $("#result")
             .css("background-image", "url(" + url + ")")
             .fadeIn();
         if ($("#comment").is(":visible")) setState("done");
-    });
+    }, function(e) { setState("start") });
 }
 
 $(function(e) {
