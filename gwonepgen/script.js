@@ -80,10 +80,18 @@ function setState(newstate) {
 }
 
 function shortenComment(comment) {
-    var sentences = comment.match(/([^!.?]+)([!.?])?/g);
-    var result = (sentences.shift() || "") + (sentences.shift() || "");
-    while (result.length < 30 && sentences.length > 0)
-        result += (sentences.shift() || "") + (sentences.shift() || "");
+    comment = comment.replace(/(https?:\/\/[^ ]+)/g, "") // remove links
+    comment = comment.replace(/[^\w\.?!,\:\;\(\)'\/\\ ]/g, "");
+    comment = comment.replace(/ {2,}/g, " ");
+
+    var sentences = comment.match(/([\w,;" ]+)([^\w.;" ])?/g);
+    var result = "";
+    for (var i = 0; i < sentences.length; i++) {
+        var oldresult = result;
+        result += sentences[i];
+        if (result.length > 100)
+            break;
+    }
     return result;
 }
 
@@ -149,7 +157,7 @@ function randomImage(subs, success, error) {
     var sub = choice(subs);
 
     $.jsonp({
-        url: "http://reddit.com/r/dddd" + sub + "/random/.json"
+        url: "http://reddit.com/r/" + sub + "/random/.json"
             + "?_=" + Date.now(),
         dataType: "json",
         error: error,
