@@ -105,7 +105,7 @@ function shortenComment(comment) {
 }
 
 function genericError(e, a, b) {
-    if (a)
+    if (e.statusText == "error")
         e = a;
     $("#error").text(e.statusText);
     setState("start");
