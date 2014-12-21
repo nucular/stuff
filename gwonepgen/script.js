@@ -91,7 +91,7 @@ function setState(newstate) {
 function shortenComment(comment) {
     comment = comment.replace(/(https?:\/\/[^ ]+)/g, "") // remove links
     comment = comment.replace(/[^\w\.?!,\:\;\(\)'\/\\\- ]/g, "");
-    comment = comment.replace(/ {2,}/g, " ");
+    comment = comment.replace(/ {2,}/g, " ").replace(/\n/g, " ");
 
     var sentences = comment.match(/([\w.,;" ]+)([^\w.;" ])?/g);
     var result = "";
