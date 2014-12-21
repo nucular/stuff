@@ -93,12 +93,12 @@ function shortenComment(comment) {
     comment = comment.replace(/[^\w\.?!,\:\;\(\)'\/\\\- ]/g, "");
     comment = comment.replace(/ {2,}/g, " ").replace(/\n/g, " ");
 
-    var sentences = comment.match(/([\w.,;" ]+)([^\w.;" ])?/g);
+    var sentences = comment.match(/([\w,;"' ]+)([^\w;"' ])?/g);
     var result = "";
     for (var i = 0; i < sentences.length; i++) {
         var oldresult = result;
         result += sentences[i];
-        if (result.length > 60)
+        if (result.length > 100)
             break;
     }
     return result;
