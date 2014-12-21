@@ -337,8 +337,8 @@ function fetchInfos(url) {
 
     $loading.slideDown("slow");
     updateLoading();
-    $.jsonp({
-        url: "https://youtube.com/get_video_info?video_id=" + id,
+    $.ajax({
+        url: "http://corser.herokuapp.com/http://youtube.com/get_video_info?video_id=" + id,
         dataType: "text",
         error: function(xhr, ts, e) {
             $loading.slideUp("fast");
