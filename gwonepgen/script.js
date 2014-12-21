@@ -98,7 +98,7 @@ function shortenComment(comment) {
     for (var i = 0; i < sentences.length; i++) {
         var oldresult = result;
         result += sentences[i];
-        if (result.length > 100)
+        if (result.length > 60)
             break;
     }
     return result;
