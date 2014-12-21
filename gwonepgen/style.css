@@ -3,6 +3,7 @@ body {
 	padding: 0;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	color: black;
+    overflow: hidden;
 }
 
 a {
@@ -40,6 +41,12 @@ button, input[type=submit], input[type=text] {
 .muted {
 	color: #444;
 	font-size: 90%;
+}
+
+#error {
+    color: rgb(231, 76, 60);
+    padding-top: 20px;
+    display: none;
 }
 
 #result {

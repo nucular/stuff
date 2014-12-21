@@ -1,9 +1,14 @@
 var FONTS = [
-    "'Lobster', cursive",
-    "'Oswald', sans-serif",
     "'Pacifico', cursive",
     "'Bangers', cursive",
-    "'Raleway', sans-serif"
+    "'Lobster', cursive",
+    "'Courgette', sursive",
+    "'Oswald', sans-serif",
+    "'Raleway', sans-serif",
+    "'Droid Serif', serif",
+    "sans-serif",
+    "serif",
+    "monospace"
 ];
 // Flat UI
 var COLORS = [
@@ -64,6 +69,7 @@ function setState(newstate) {
     if (state == "done" && newstate != "done") {
         $("#comment").fadeOut("slow");
         $("#result").fadeOut("fast");
+        $("#error").text("").slideUp();
     }
     if (newstate == "done" && state != "done") {
         updatePerma();
@@ -74,6 +80,9 @@ function setState(newstate) {
     if (newstate == "start" && state != "start") {
         document.location.hash = "";
         $("#wrapper").fadeIn();
+        if ($("#error").text() != "") {
+            $("#error").slideDown();
+        }
     }
 
     state = newstate;
@@ -81,10 +90,10 @@ function setState(newstate) {
 
 function shortenComment(comment) {
     comment = comment.replace(/(https?:\/\/[^ ]+)/g, "") // remove links
-    comment = comment.replace(/[^\w\.?!,\:\;\(\)'\/\\ ]/g, "");
+    comment = comment.replace(/[^\w\.?!,\:\;\(\)'\/\\\- ]/g, "");
     comment = comment.replace(/ {2,}/g, " ");
 
-    var sentences = comment.match(/([\w,;" ]+)([^\w.;" ])?/g);
+    var sentences = comment.match(/([\w.,;" ]+)([^\w.;" ])?/g);
     var result = "";
     for (var i = 0; i < sentences.length; i++) {
         var oldresult = result;
@@ -95,12 +104,18 @@ function shortenComment(comment) {
     return result;
 }
 
+function genericError(e) {
+    $("#error").text(e.statusText);
+    setState("start");
+}
+
 function randomComment(subs, success, error) {
     var sub = choice(subs);
 
-    $.jsonp({
-        url: "http://reddit.com/r/" + sub + "/random/.json"
+    $.ajax({
+        url: "http://corser.herokuapp.com/reddit.com/r/" + sub + "/random/.json"
             + "?_=" + Date.now(),
+        crossDomain: true,
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -131,8 +146,9 @@ function randomComment(subs, success, error) {
 }
 
 function permaComment(url, success, error) {
-    $.jsonp({
-        url: url + "/.json?limit=1",
+    $.ajax({
+        url: "http://corser.herokuapp.com/" + url + "/.json?limit=1",
+        crossDomain: true,
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -156,9 +172,10 @@ function permaComment(url, success, error) {
 function randomImage(subs, success, error) {
     var sub = choice(subs);
 
-    $.jsonp({
-        url: "http://reddit.com/r/" + sub + "/random/.json"
+    $.ajax({
+        url: "http://corser.herokuapp.com/reddit.com/r/" + sub + "/random/.json"
             + "?_=" + Date.now(),
+        crossDomain: true,
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -187,8 +204,9 @@ function randomImage(subs, success, error) {
 }
 
 function permaImage(url, success, error) {
-    $.jsonp({
-        url: url + "/.json?limit=0",
+    $.ajax({
+        url: "http://corser.herokuapp.com/" + url + "/.json?limit=0",
+        crossDomain: true,
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -227,8 +245,8 @@ function generate(comment_subs, image_subs) {
             .css("color", COLORS[colid])
             .css("text-shadow", "0px 0px 4px " + SHADOW[colid])
             .css("font-family", choice(FONTS))
-            .css("font-size", (7 + Math.random() * 3).toString() + "vmin")
-            .css("top", Math.floor(Math.random() * 70).toString() + "%")
+            .css("font-size", (7 + Math.random() * 3).toString() + "vh")
+            .css("top", Math.floor(Math.random() * 75).toString() + "%")
             .attr("href", permalink)
             .text(text)
             .fadeIn();
@@ -241,13 +259,13 @@ function generate(comment_subs, image_subs) {
             .text("/u/" + author);
 
         if ($("#result").is(":visible")) setState("done");
-    }, function(e) { setState("start") });
+    }, genericError);
     randomImage(image_subs, function(url) {
         $("#result")
             .css("background-image", "url(" + url + ")")
             .fadeIn();
         if ($("#comment").is(":visible")) setState("done");
-    }, function(e) { setState("start") });
+    }, genericError);
 }
 
 function perma(comment_link, image_link) {
@@ -259,8 +277,8 @@ function perma(comment_link, image_link) {
             .css("color", COLORS[colid])
             .css("text-shadow", "0px 0px 4px " + SHADOW[colid])
             .css("font-family", choice(FONTS))
-            .css("font-size", (7 + Math.random() * 3).toString() + "vmin")
-            .css("top", Math.floor(Math.random() * 80).toString() + "%")
+            .css("font-size", (7 + Math.random() * 3).toString() + "vh")
+            .css("top", Math.floor(Math.random() * 75).toString() + "%")
             .attr("href", permalink)
             .text(text)
             .fadeIn();
@@ -273,13 +291,13 @@ function perma(comment_link, image_link) {
             .text("/u/" + author);
 
         if ($("#result").is(":visible")) setState("done");
-    }, function(e) { setState("start") });
+    }, genericError);
     permaImage(image_link, function(url) {
         $("#result")
             .css("background-image", "url(" + url + ")")
             .fadeIn();
         if ($("#comment").is(":visible")) setState("done");
-    }, function(e) { setState("start") });
+    }, genericError);
 }
 
 $(function(e) {
