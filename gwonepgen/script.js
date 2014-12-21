@@ -109,13 +109,23 @@ function genericError(e) {
     setState("start");
 }
 
+function randomRelay(url) {
+    var RELAYS = [
+        ["http://corser.herokuapp.com/", false],
+        ["http://cors-anywhere.herokuapp.com/", false]
+    ]
+    var r = RELAYS[Math.floor(Math.random() * RELAYS.length)];
+    if (r[1])
+        url = encodeURIComponent(url);
+    return r[0] + url;
+}
+
 function randomComment(subs, success, error) {
     var sub = choice(subs);
 
     $.ajax({
-        url: "http://corser.herokuapp.com/reddit.com/r/" + sub + "/random/.json"
-            + "?_=" + Date.now(),
-        crossDomain: true,
+        url: randomRelay("http://reddit.com/r/" + sub + "/random/.json"
+            + "?_=" + Date.now()),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -147,8 +157,7 @@ function randomComment(subs, success, error) {
 
 function permaComment(url, success, error) {
     $.ajax({
-        url: "http://corser.herokuapp.com/" + url + "/.json?limit=1",
-        crossDomain: true,
+        url: randomRelay(url + "/.json?limit=1"),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -173,9 +182,8 @@ function randomImage(subs, success, error) {
     var sub = choice(subs);
 
     $.ajax({
-        url: "http://corser.herokuapp.com/reddit.com/r/" + sub + "/random/.json"
-            + "?_=" + Date.now(),
-        crossDomain: true,
+        url: randomRelay("http://reddit.com/r/" + sub + "/random/.json"
+            + "?_=" + Date.now()),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -205,8 +213,7 @@ function randomImage(subs, success, error) {
 
 function permaImage(url, success, error) {
     $.ajax({
-        url: "http://corser.herokuapp.com/" + url + "/.json?limit=0",
-        crossDomain: true,
+        url: randomRelay(url + "/.json?limit=0"),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
