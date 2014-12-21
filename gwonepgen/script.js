@@ -104,7 +104,9 @@ function shortenComment(comment) {
     return result;
 }
 
-function genericError(e) {
+function genericError(e, a, b) {
+    if (a)
+        e = a;
     $("#error").text(e.statusText);
     setState("start");
 }
@@ -359,5 +361,5 @@ $(function(e) {
     });
     $("#perma").click(function(e) {
         e.stopPropagation();
-    })
+    });
 });
