@@ -72,6 +72,7 @@ var itagToText = {
     10072 : "72p Live",
     */
 };
+var oldhash = "";
 
 String.prototype.repeat = function( num )
 {
@@ -309,7 +310,7 @@ function fetchInfos(url) {
     $().add($error).add($results).slideUp("fast");
 
     if (url == "") {
-        document.location.hash = "";
+        document.location.hash = ""; oldhash = "";
         $("#shortlink").attr("href", "http://ytdl.ga").text("ytdl.ga#[Video URL]");
         return;
     }
@@ -326,13 +327,13 @@ function fetchInfos(url) {
         }
         else {
             $error.text("Invalid URL or ID!");
-            document.location.hash = "";
+            document.location.hash = ""; oldhash = "";
             $("#shortlink").attr("href", "http://ytdl.ga").text("ytdl.ga#[Video URL]");
             $().add($fetchbutton).add($videoinput).add($error).slideDown("slow");
             return;
         }
     }
-    document.location.hash = id;
+    document.location.hash = id; oldhash = id;
     $("#shortlink").attr("href", "http://ytdl.ga#" + id).text("ytdl.ga#" + id);
 
     $loading.slideDown("slow");
@@ -354,6 +355,16 @@ function fetchInfos(url) {
     return false;
 }
 
+function checkHash() {
+    var hash = document.location.hash.trim();
+    hash = hash.substring(1);
+    if (hash != oldhash && hash != "" && hash != "#") {
+        $videoinput.val(hash);
+        fetchInfos(hash);
+        oldhash = hash;
+    }
+}
+
 $(function() {
     $fetchbutton = $("#fetch-button");
     $videoinput = $("#video-input");
@@ -361,18 +372,12 @@ $(function() {
     $error = $("#error");
     $results = $("#results");
 
-    var hash = document.location.hash.trim();
-    if (hash != "") {
-        hash = hash.substring(1);
-        $videoinput.val(hash);
-        fetchInfos(hash);
-    }
-
     $("form").submit(function(e) {
         e.preventDefault();
         var url = $videoinput.val().trim();
         fetchInfos(url);
     });
 
+    setInterval(checkHash, 500);
     setInterval(updateLoading, 4000);
 });
