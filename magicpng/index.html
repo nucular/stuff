@@ -1,0 +1,37 @@
+<html>
+<head>
+    <title>Magic PNG generator &middot; by nucular</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic&amp;subset=latin-ext">
+    <link rel="stylesheet" href="style.css"/>
+    
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div id="wrapper">
+        <h1>Magic PNG Generator</h1>
+        <p>
+            This tool generates a single PNG image from two different ones. The trick
+            is that one image will only be shown by various thumbnail renderers (Facebook, 4chan, Reddit etc.), Apple and Windows PNG viewers while the other image will be shown by Firefox and Google Chrome (and everything using libpng for rendering).<br/>
+            Thanks to Tristan Hume for explaining the method <a href="http://thume.ca/projects/2012/11/14/magic-png-files">here</a>!
+        </p>
+
+        <div id="input">
+            <div id="input-drop-1" class="drop-area"><canvas id="input-canvas-1" class="input-canvas" width="250" height="250"></canvas></div>
+            <div id="input-actions">
+                <div id="generate" class="button">Generate!</div><br/>
+            </div>
+            <div id="input-drop-2" class="drop-area"><canvas id="input-canvas-2" class="input-canvas" width="250" height="250"></canvas></div>
+        </div>
+        <div id="output">
+            <canvas id="output-canvas" width="250" height="250"></canvas>
+            <div id="output-actions">
+                <div id="back" class="button">Back</div><br/>
+                <a id="save-a"><div id="save" class="button">Save</div></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

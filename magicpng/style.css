@@ -1,0 +1,123 @@
+html, body {
+    background-color: #f5f5f5;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1rem;
+    color: #333;
+}
+
+a {
+    color: #0070bb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #035;
+}
+
+.button {
+    display: inline-block;
+
+    color: #fff;
+    text-align: center;
+    padding-top: 10px;
+
+    width: 100px;
+    height: 30px;
+    background-color: #333;
+
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #222;
+}
+
+
+#wrapper {
+    max-width: 700px;
+    margin: auto;
+}
+
+
+.input-canvas {
+    width: 250px;
+    height: 250px;
+    background-color: #f3f3f3;
+    box-shadow: inset 0px 0px 20px #ccc;
+    outline: 2px dashed #ccc;
+}
+
+#output {
+    display: none;
+}
+
+#output-canvas {
+    width: 100%;
+    height: auto;
+    background-color: #f3f3f3;
+    box-shadow: inset 0px 0px 20px #ccc;
+    outline: 2px dashed #ccc;
+}
+
+.drop-area {
+    width: 250px;
+    height: 250px;
+}
+
+.drop-area#input-drop-1 {
+    float: left;
+}
+
+.drop-area#input-drop-2 {
+    float: right;
+}
+
+
+#input-actions {
+    display: inline-block;
+    float: left;
+}
+
+#input-actions input {
+    width: 100px;
+}
+
+#output-actions {
+    margin-top: 20px;
+}
+
+#output-actions .button {
+    display: block;
+    margin: auto;
+}
+
+
+#generate {
+    margin-left: 50px; margin-right: 50px;
+}
+
+
+
+@media(max-width: 715px) {
+    .input-canvas {
+        display: block;
+        margin: auto;
+    }
+
+    .drop-area {
+        float: none !important;
+        width: 100%;
+    }
+
+    #generate {
+        display: block;
+        margin-left: auto; margin-right: auto;
+    }
+
+    #input-actions {
+        display: block;
+        margin-top: 20px;
+        float: none;
+    }
+}
