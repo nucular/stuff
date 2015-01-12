@@ -3,6 +3,8 @@ FADE1 = 220.0 / 255.0;
 FADE2 = 210.0 / 255.0;
 SHIFT = 10;
 
+window.URL = (URL || webkitURL || mozURL);
+
 function makeCRCTable(){
     var c;
     var crcTable = [];
@@ -52,13 +54,15 @@ function setgAMA(data, gamma) {
 }
 
 $(function() {
+    var worker = new Worker("worker.js");
+
     var ctx1 = $("#input-canvas-1")[0].getContext("2d");
     var ctx2 = $("#input-canvas-2")[0].getContext("2d");
     ctx1.fillText("Image 1", 105, 120); ctx2.fillText("Image 2", 105, 120);
 
     $("#back").bind("click", function() {
-        $("#output").fadeOut("fast", function() {
-            $("#input").fadeIn("fast");
+        $("#output").finish().fadeOut("fast", function() {
+            $("#input").finish().fadeIn("fast");
         });
     })
 
@@ -90,7 +94,9 @@ $(function() {
         }
     });
     $("#generate").bind("click", function(e) {
-        $("#input").fadeOut("fast");
+        $("#input").fadeOut("fast", function() {
+            $("#process").show();
+        });
 
         var ctx = $("#output-canvas")[0].getContext("2d");
         var width = Math.min(ctx1.canvas.width, ctx2.canvas.width);
@@ -98,50 +104,52 @@ $(function() {
 
         ctx.canvas.width = width; ctx.canvas.height = height;
 
-        outdata = ctx.getImageData(0, 0, width, height);
-        indata1 = ctx1.getImageData(0, 0, width, height);
-        indata2 = ctx2.getImageData(0, 0, width, height);
+        var indata1 = ctx1.getImageData(0, 0, width, height);
+        var indata2 = ctx2.getImageData(0, 0, width, height);
 
-        var tf1 = function(c) {
-            var scaled = c * FADE1 + SHIFT;
-            return Math.floor(Math.pow(scaled / 255.0, GAMMA) * 255.0)
+        worker.postMessage({
+            mode: "merge",
+            indata1: indata1.data,
+            indata2: indata2.data,
+            width: width,
+            height: height,
+
+            fade1: FADE1,
+            fade2: FADE2,
+            shift: SHIFT,
+            gamma: GAMMA
+        });
+    });
+
+    worker.addEventListener("message", function(e) {
+        var data = e.data;
+
+        if (data.mode == "process") {
+            $("#processbar-inner").css("width", data.process + "%");
+        } else if (data.mode == "merge") {
+            var ctx = $("#output-canvas")[0].getContext("2d");
+
+            var outdata = ctx.getImageData(0, 0, data.width, data.height);
+            outdata.data.set(data.outdata);
+
+            ctx.putImageData(outdata, 0, 0);
+            var url = $("#output-canvas")[0].toDataURL();
+            var data = atob(url.substring(22));
+            data = setgAMA(data, GAMMA);
+
+            var buf = new ArrayBuffer(data.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < view.length; i++)
+                view[i] = data.charCodeAt(i);
+
+            var blob = new Blob([view], {"type": "image/png"});
+            var url = URL.createObjectURL(blob);
+
+            $("#save-a").attr("href", url);
+            $("#process").hide();
+            $("#output").fadeIn("fast", function() {
+                $("#process").hide(); // just to be sure
+            });
         }
-        var tf2 = function(c) {return Math.round(c * FADE2)}
-
-        for (var x = 0; x < width * 2; x++) {
-            for (var y = 0; y < height * 2; y++) {
-
-                var o = ((y * width) + x) * 4;
-                var i = o; //((Math.floor(y / 2) * width) + Math.floor(x / 2)) * 4;
-
-                if ((x%2==0 && y%2==1) || (x%2==1 && y%2==0)) {
-                    outdata.data[o] = tf1(indata1.data[i]);
-                    outdata.data[o+1] = tf1(indata1.data[i+1]);
-                    outdata.data[o+2] = tf1(indata1.data[i+2]);
-                    outdata.data[o+3] = tf1(indata1.data[i+3]);
-                } else {
-                    outdata.data[o] = tf2(indata2.data[i]);
-                    outdata.data[o+1] = tf2(indata2.data[i+1]);
-                    outdata.data[o+2] = tf2(indata2.data[i+2]);
-                    outdata.data[o+3] = tf2(indata2.data[i+3]);
-                }
-            }
-        }
-
-        ctx.putImageData(outdata, 0, 0);
-        var url = $("#output-canvas")[0].toDataURL();
-        var data = atob(url.substring(22));
-        data = setgAMA(data, GAMMA);
-
-        var buf = new ArrayBuffer(data.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i < view.length; i++)
-            view[i] = data.charCodeAt(i);
-
-        var blob = new Blob([view], {"type": "image/png"});
-        var url = (URL || webkitURL || mozURL).createObjectURL(blob);
-
-        $("#save-a").attr("href", url);
-        $("#output").fadeIn("fast");
     });
 });
