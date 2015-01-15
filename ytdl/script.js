@@ -1,75 +1,93 @@
 var itagToText = {
     0:   "dash",
-    299: "1080p/mp4v",
-    298: "720p/mp4v",
-    272: "hires/webm",
-    271: "1440p/webm",
-    264: "1440p/mp4v", // hires
-    248: "1080p/webm",
-    247: "720p/webm",
-    246: "480p/webm",
-    245: "480p/webm",
-    244: "480p/webm",
-    243: "360p/webm",
-    242: "240p/webm",
-    172: "160kbps/webm",
-    171: "96kbps/webm",
-    160: "144p/mp4v",
-    141: "256kbps/mp4a",
-    140: "128kbps/mp4a",
-    139: "48kbps/mp4a",
-    138: "hires/mp4v",
-    137: "1080p/mp4v",
-    136: "720p/mp4v",
-    135: "480p/mp4v",
-    134: "360p/mp4v",
-    133: "240p/mp4v",
-    120: "720p/flv",
+
+    // MP4
+
+    38 : "highres/mp4", //1440p variable?
+    37 : "1080p/mp4",
+    22 : "720p/mp4",
+    20 : "480p/mp4",
+    18 : "360p/mp4",
+    // 3D
     102: "720p/webm/3D",
     101: "360p/webmH/3D",
     100: "360p/webmL/3D",
+    // Adaptive video
+    138: "hires/mp4v",
+    264: "1440p/mp4v",
+    137: "1080p/mp4v", 299: "1080p/mp4v",
+    136: "720p/mp4v", 298: "720p/mp4v",
+    135: "480p/mp4v",
+    134: "360p/mp4v",
+    133: "240p/mp4v",
+    160: "144p/mp4v",
+    // Adaptive audio
+    141: "256kbps/mp4a",
+    140: "128kbps/mp4a",
+    139: "48kbps/mp4a",
+
+    // WebM
+
+    46 : "1080p/webm",
+    45 : "720p/webm",
+    44 : "480p/webm",
+    43 : "360p/webm",
+    // 3D
     85 : "520p/mp4/3D",
     84 : "720p/mp4/3D",
     83 : "240p/mp4/3D",
     82 : "360p/mp4/3D",
-    //78: "",
-    //59: "",
-    46 : "1080p/webm",
-    37 : "1080p/mp4",
-    45 : "720p/webm",
-    22 : "720p/mp4",
-    44 : "480p/webm",
-    20 : "480p/mp4",
+    // Adaptive video
+    272: "hires/webm",
+    271: "1440p/webm",
+    248: "1080p/webm",
+    247: "720p/webm",
+    246: "480p/webm", 245: "480p/webm",
+    244: "480p/webm",
+    243: "360p/webm",
+    242: "240p/webm",
+    278: "144p/webm",
+    // Adaptive audio
+    172: "160kbps/weba",
+    171: "96kbps/weba",
+    249: "unknown/weba", // downloads 403'd 
+    250: "unknown/weba",
+    251: "unknown/weba",
+    
+    // FLV
+
+    120: "720p/flv",
     35 : "480p/flv",
-    43 : "360p/webm",
-    18 : "360p/mp4",
     34 : "360p/flv",
     5  : "240p/flv",
-    36 : "180p/3gpp",
-    17 : "144p/3gpp",
-    // last, just in case 4k video crashes graphics cards driver
-    38 : "highres/mp4", //1440p variable?
-    //4? : "highres/webm"
 
-    96 : "1080p Live",
-    95 : "720p Live",
-    94 : "480p Live",
-    93 : "360p Live",
-    92 : "240p Live",
-    91 : "180p Live", //Guess work
-    90 : "144p Live", //Guess work
-    132 : "240p Live",
-    151 : "72p Live",
+    // 3GPP
+
+    17 : "144p/3gpp",
+    36 : "180p/3gpp",
+
+    // Live
+
+    96 : "1080p/live",
+    95 : "720p/live",
+    94 : "480p/live",
+    93 : "360p/live",
+    92 : "240p/live",
+    91 : "180p/live", // guesswork
+    90 : "144p/live", // guesswork
+    132 : "240p/live",
+    151 : "72p/live",
+
     /*
-    //Fake live formats
-    11080 : "1080p Live",
-    10720 : "720p Live",
-    10480 : "480p Live",
-    10360 : "360p Live",
-    10240 : "240p Live",
-    10180 : "180p Live",
-    10144 : "144p Live",
-    10072 : "72p Live",
+    // Fake live
+    11080 : "1080p/live",
+    10720 : "720p/live",
+    10480 : "480p/live",
+    10360 : "360p/live",
+    10240 : "240p/live",
+    10180 : "180p/live",
+    10144 : "144p/live",
+    10072 : "72p/live",
     */
 };
 var oldhash = "";
@@ -79,7 +97,7 @@ String.prototype.repeat = function( num )
     return new Array( num + 1 ).join( this );
 }
 
-function getTypeExt(type, def) {
+function getTypeExt(type, deflt) {
     var container = type.split(";");
     if (container && container[0]) {
         switch (container[0]) {
@@ -92,10 +110,10 @@ function getTypeExt(type, def) {
             case "video/x-flv": return ".flv"; break;
             case "video/3gpp": return ".3gp"; break;
 
-            default: return (def || ""); break;
+            default: return (deflt || ""); break;
         }
     } else {
-        return (def || "");
+        return (deflt || "");
     }
 }
 
@@ -221,6 +239,7 @@ function showResults(r) {
 
                 var itext = itagToText[v.itag] || "Unknown (" + v.itag + ")";
                 var saneitext = (itagToText[v.itag] || v.itag.toString()).replace(/\//g, "-");
+                
                 var type = v.type || "";
                 var sanetype = type.replace(";", " ")
                     .replace("+codecs=", "(")
