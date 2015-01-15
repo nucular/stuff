@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="style.css"/>
     
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="jsonproxy.js"></script>
     <script src="loadmsg.js"></script>
     <script src="script.js"></script>
 </head>
@@ -21,26 +20,35 @@
                     <h1>YtDl</h1>
                     <p>
                         The fastest YouTube downloader ever.<br/>
-						Runs directly in your browser, no slow format conversion, served right from YTs CDN.<br/>
+						Runs in your browser, no slow format conversion, served right from the CDN.<br/>
                         <small>Pro-Tip: <a href="http://ytdl.ga" id="shortlink">ytdl.ga#[Video URL]</a></small>
                     </p>
 					
 					<form>
 	                    <input id="video-input" placeholder="Enter a YouTube URL or ID"></input>
-	                    <button type="submit" id="fetch-button">Fetch!</button>
+	                    <button type="submit" id="fetch-button">Go!</button>
 	                </form>
                     <br/>
                     <p id="loading"><span></span><span class="ellipsis">...</span></p>
                     <p id="error"></p>
                     
                     <div id="results">
+                        <div id="quick-links">
+                            <a class="dl-link" id="download-both"><div class="button">Download</div></a>
+                            <a class="dl-link" id="download-audio"><div class="button">Audio only</div></a>
+                            <a class="dl-link" id="download-video"><div class="button">Video only</div></a>
+                        </div>
+
                     	<div>
-	                        <a id="vidlink"><img id="thumbnail"></img></a>
+	                        <a id="video-link"><img id="thumbnail"></img></a>
 	                        <span id="author"></span>
 	                        <h3 id="title"></h3>
 	                    </div>
 
+                        <br/>
+
                         <table id="fmts" class="result-table">
+                            <h4>Formats</h4>
                             <thead>
                                 <td>Name</td>
                                 <td>Quality</td>
@@ -61,12 +69,13 @@
                             <tbody>
                             </tbody>
                         </table>
-                        <small id="dl-hint">Use Left click > Save file/link as...</small>
                     </div>
                 </div>
             </div>
             <small>Not affiliated with Google. For educational purpose only. Just kidding.</small>
         </div>
     </div>
+
+    <small id="dl-hint">Use Menu > Save file/link as...</small>
 </body>
 </html>

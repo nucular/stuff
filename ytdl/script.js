@@ -92,9 +92,9 @@ var itagToText = {
 };
 var oldhash = "";
 
-String.prototype.repeat = function( num )
+String.prototype.repeat = function(num)
 {
-    return new Array( num + 1 ).join( this );
+    return new Array(num + 1).join(this);
 }
 
 function getTypeExt(type, deflt) {
@@ -149,59 +149,24 @@ function processInfos(t) {
     var parsed = parse_qs(t, "&");
 
     if (parsed.hasOwnProperty("adaptive_fmts")) {
-        console.log("=== afmts ===");
-
         var afmts = parsed.adaptive_fmts;
-        afmts = parse_qsl(afmts, "&,");
+        afmts = afmts.split(",");
         var parsed_afmts = [];
-        var current = {};
-        var startmarker = afmts[0][0];
+
         $.each(afmts, function(k, v) {
-            if (k != 0 && v[0] == startmarker) {
-                if (current.hasOwnProperty("url")) {
-                    parsed_afmts.push(current);
-                }
-                current = {};
-                current[startmarker] = v[1];
-                console.log("---");
-            }
-            else { 
-                current[v[0]] = v[1];
-            }
-            console.log(v[0], v[1]);
+            parsed_afmts.push(parse_qs(v, "&"))
         });
-        if (current.hasOwnProperty("url")) {
-            parsed_afmts.push(current);
-        }
         parsed.adaptive_fmts = parsed_afmts;
     }
 
     if (parsed.hasOwnProperty("url_encoded_fmt_stream_map")) {
-        console.log("");
-        console.log("=== fmts ===");
-
         var fmtmap = parsed.url_encoded_fmt_stream_map;
-        fmtmap = parse_qsl(fmtmap, "&,");
+        fmtmap = fmtmap.split(",");
         var parsed_fmts = [];
-        var current = {};
-        var startmarker = fmtmap[0][0];
+
         $.each(fmtmap, function(k, v) {
-            if (k != 0 && v[0] == startmarker) {
-                if (current.hasOwnProperty("url")) {
-                    parsed_fmts.push(current);
-                }
-                current = {};
-                current[startmarker] = v[1];
-                console.log("---");
-            }
-            else {
-                current[v[0]] = v[1];
-            }
-            console.log(v[0], v[1]);
+            parsed_fmts.push(parse_qs(v, "&"));
         });
-        if (current.hasOwnProperty("url")) {
-            parsed_fmts.push(current);
-        }
         parsed.url_encoded_fmt_stream_map = undefined;
         parsed.fmts = parsed_fmts;
     }
@@ -230,6 +195,8 @@ function showResults(r) {
 
     $("#author").html(author);
     $("#title").html(title);
+
+    $("#quick-links>.dl-link>.button").attr("disabled", true);
 
     $("tbody", $results).children().remove();
     if (r.hasOwnProperty("fmts")) {
@@ -267,6 +234,13 @@ function showResults(r) {
                 tr.appendTo("#fmts>tbody");
             }
         });
+        
+        var saneitext = (itagToText[r.fmts[0].itag] || r.fmts[0].itag.toString()).replace(/\//g, "-");
+        var filename = sanetitle + " (" + saneitext + ")" + getTypeExt(r.fmts[0].type || "");
+        $("#download-both")
+            .attr("download", filename)
+            .attr("href", r.fmts[0].url)
+            .children(".button").attr("disabled", false);
     }
 
     if (r.hasOwnProperty("adaptive_fmts")) {
@@ -277,7 +251,7 @@ function showResults(r) {
                 var itext = itagToText[v.itag] || "Unknown (" + v.itag + ")";
                 var saneitext = (itagToText[v.itag] || v.itag.toString()).replace(/\//g, "-");
                 var type = v.type || "";
-                var sanetype = v.type.replace(";", " ")
+                var sanetype = type.replace(";", " ")
                     .replace("+codecs=", "(")
                     .replace(/\"/g, "")
                     .replace(/\,/g, ", ") + ((type.indexOf("+codecs=") != -1) ? ")" : "");
@@ -308,11 +282,46 @@ function showResults(r) {
                 tr.appendTo("#afmts>tbody");
             }
         });
+
+        var audio = "", video = "";
+        $.each(r.adaptive_fmts, function(i, v) {
+            if (v.type.indexOf("audio") == 0 && !audio)
+                audio = v;
+            else if (!video)
+                video = v;
+        });
+        if (audio) {
+            var saneitext = (itagToText[audio.itag] || audio.itag.toString()).replace(/\//g, "-");
+            var filename = sanetitle + " (" + saneitext + ")" + getTypeExt(audio.type || "");
+            $("#download-audio")
+                .attr("download", filename)
+                .attr("href", audio.url)
+                .children(".button").attr("disabled", false);
+        } if (video) {
+            var saneitext = (itagToText[video.itag] || video.itag.toString()).replace(/\//g, "-");
+            var filename = sanetitle + " (" + saneitext + ")" + getTypeExt(video.type || "");
+            $("#download-video")
+                .attr("download", filename)
+                .attr("href", video.url)
+                .children(".button").attr("disabled", false);
+        }
     }
 
     $(".dl-link").click(function(e) {
         e.preventDefault();
-        $("#dl-hint").stop(true).fadeOut("fast").fadeIn("fast").fadeOut("fast").fadeIn("fast");
+        // jQuery isn't great at this
+        $("#dl-hint")
+            .stop(true)
+            .fadeIn("fast")
+            .animate({"margin-left": -90}, function() {
+                $(this).animate({"margin-left": -100}, function() {
+                        $(this).animate({"margin-left": -90}, function() {
+                            $(this).animate({"margin-left": -100}, function() {
+                                    $(this).fadeOut("fast");
+                                });
+                        });
+                    });
+            });
     })
 
     if (r.hasOwnProperty("thumbnail_url")) {
@@ -320,7 +329,7 @@ function showResults(r) {
     } else {
         $("#thumbnail").attr("src", "http://www.userlogos.org/files/logos/48083_szop_gracz/yt_logo2.png");
     }
-    $("#vidlink").attr("href", "https://www.youtube.com/watch?v=" + r.video_id)
+    $("#video-link").attr("href", "https://www.youtube.com/watch?v=" + r.video_id)
 
     $().add($fetchbutton).add($videoinput).add($results).slideDown("slow");
 }
