@@ -38,27 +38,21 @@ small {
 }
 
 
-.item {
-    transition: opacity 0.2s ease-out;
-}
-
-.item:hover {
-    opacity: 1;
-}
-
-
 .wip {
-    /* dunno what to put here */
+    color: #300;
 }
 
 .boring {
     opacity: 0.5;
+    transition: opacity 0.2s ease-out;
 }
 
-.emphasis {
-    padding-left: 5px;
-    -webkit-animation: slide-anim 1s ease-out 0s infinite alternate;
-    animation: slide-anim 1s;
+.boring:hover {
+    opacity: 0.8;
+}
+
+.emphasis a {
+    font-weight: bold;
 }
 
 
@@ -69,14 +63,4 @@ small {
 
 .description {
     padding-left: 10px;
-}
-
-
-@-webkit-keyframes slide-anim {
-    from {
-        padding-left: 0px;
-    }
-    to {
-        padding-left: 5px;
-    }
 }

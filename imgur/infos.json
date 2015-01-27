@@ -1,7 +1,7 @@
 {
-    "description": "Simple imgur roulette with a few tricks (NSFW)",
+    "description": "Simple imgur roulette. Also try <a href=\"http://nucular.github.io/fuzz\">fuzz</a>",
     "hidden": false,
-    "boring": false,
+    "boring": true,
     "wip": false,
     "emphasis": false
 }

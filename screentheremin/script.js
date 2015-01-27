@@ -7,7 +7,7 @@ function clear() {
 }
 
 function render() {
-    var pitch =  1 + ((mouse.top + 150) / canvas.height) * 10;
+    var pitch =  1 + ((mouse.top + 200) / canvas.height) * 15;
 
     ctx.fillStyle = "#fff";
     var w = canvas.width, h = canvas.height;

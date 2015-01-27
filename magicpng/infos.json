@@ -1,0 +1,7 @@
+{
+    "description": "Generates a *magic* PNG that shows as different images in different viewers",
+    "hidden": false,
+    "boring": false,
+    "wip": false,
+    "emphasis": true
+}

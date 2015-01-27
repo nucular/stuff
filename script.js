@@ -24,14 +24,14 @@ $(function() {
 
                         if (inf.boring) {
                             tags = tags + "[boring]";
-                            span[0].classList.add("boring");
+                            span.addClass("boring");
                         }
                         if (inf.wip) {
                             tags = tags + "[WIP]";
-                            span[0].classList.add("wip");
+                            span.addClass("wip");
                         }
                         if (inf.emphasis) {
-                            span[0].classList.add("emphasis");
+                            span.addClass("emphasis");
                         }
 
                         if (tags != "")

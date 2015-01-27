@@ -1,7 +1,7 @@
 {
-    "description": "Makes images epic",
+    "description": "SVG modification experiment, displays your images/YouTube",
     "hidden": false,
-    "boring": false,
+    "boring": true,
     "wip": false,
     "emphasis": false
 }

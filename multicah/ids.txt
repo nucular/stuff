@@ -10,6 +10,7 @@ Ambitious
 Amused
 Angle
 Ants
+Apathetic
 Apparatus
 Apparel
 Appliance
@@ -124,6 +125,7 @@ Field
 Fierce
 Fine
 Fire
+Fish
 Flagrant
 Flesh
 Flock
@@ -301,6 +303,7 @@ Sassy
 Scarf
 School
 Scintillating
+Scissors
 Screw
 Sea
 Secretary
@@ -332,6 +335,7 @@ Spectacular
 Spiritual
 Sponge
 Spy
+Square
 Squirrel
 Star
 Steadfast

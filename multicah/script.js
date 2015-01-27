@@ -60,9 +60,8 @@ $(function() {
             $.each(ids, function(i, v) {
                 var url = "http://files.explosm.net/rcg/" + v + v + v + ".png";
 
+                var panel = $("<div class=\"panel\"></div>");
                 $("<img src=\"" + url + "\">").load(function() {
-                    var panel = $("<div class=\"panel\"></div>");
-
                     $("<div class=\"image i1\">")
                         .css("background-image", "url(" + url + ")")
                         .attr("title", v)
@@ -71,8 +70,10 @@ $(function() {
                         .css("background-image", "url(" + url + ")")
                         .attr("title", v)
                         .appendTo(panel);
-                    panel.appendTo(output);
+                }).error(function() {
+                    panel.remove();
                 });
+                panel.appendTo(output);
             });
         }
 
