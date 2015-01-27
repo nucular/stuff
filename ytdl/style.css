@@ -50,7 +50,17 @@ button[disabled], .button[disabled] {
 
 
 h1 {
-    font-family: 'Oswald', sans-serif;
+    font-family: "Oswald", sans-serif;
+}
+
+h1:before {
+    content: url("icon32.png");
+    margin-right: 10px;
+
+    position: relative;
+    top: 2px;
+
+    opacity: 0.7;
 }
 
 h1, h2, h3, h4 {
