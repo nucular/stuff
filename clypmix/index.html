@@ -11,7 +11,14 @@
     <div class="container" id="main">
         <h1>ClypMix</h1>
         <button class="btn btn-primary" id="go-button">Go/Skip</button>
+        <a id="android-fix" href="#">Fix autoplay on Android Chrome</a>
         <div class="spacer">&nbsp;</div>
+        <div id="android-fix-modal" style="display: none;" class="container">
+            Chrome for Android requires the user to interact with a media object for it to play as a "safety feature", which breaks autoplay.
+            <br/>
+            Open this URL and disable the option:
+            <input type="text" class="form-control" value="chrome://flags/#disable-gesture-requirement-for-media-playback" id="android-fix-input"></input>
+        </div>
     </div>
 
     <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>

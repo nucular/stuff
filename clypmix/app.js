@@ -28,3 +28,8 @@ function loadNext() {
 $("#go-button").click(function() {
     loadNext();
 });
+
+$("#android-fix").click(function() {
+    $("#android-fix-modal").fadeToggle();
+    $("#android-fix-input").focus().select();
+});
