@@ -7,7 +7,7 @@ function loadNext() {
 
         var c = $("<div id='playercontainer'></div>").hide();
 
-        var a = $("<audio controls autoplay id='player'></audio>").appendTo(c);
+        var a = $("<audio controls preload id='player'></audio>").appendTo(c);
         $("<source src='" + res.SecureOggUrl + "' type='audio/ogg'>").appendTo(a);
         $("<source src='" + res.SecureMp3Url + "' type='audio/mp3'>").appendTo(a);
         a.bind("ended", function() {
@@ -21,6 +21,7 @@ function loadNext() {
         $("<a></a>").attr("href", res.OggUrl).text("OGG").appendTo(c);
 
         c.appendTo("#main").fadeIn();
+        a[0].play();
     });
 }
 
