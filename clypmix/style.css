@@ -1,0 +1,21 @@
+#controls {
+    margin-bottom: 10px;
+}
+
+#android-fix-dialog {
+    margin-bottom: 10px;
+    display: none;
+}
+
+#preloading {
+    display: none;
+}
+
+#volume-slider {
+    max-width: 100px;
+    margin-left: 10px;
+}
+
+#volume-slider .slider-selection {
+    background: #BABABA;
+}
