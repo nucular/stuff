@@ -624,7 +624,9 @@
 					$("#swipebox-slider .slide").not(".current").find(".swipebox-video-html5").each(function() {
 						this.pause();
 					});
-					$("#swipebox-slider .slide.current").find(".swipebox-video-html5")[0].play();
+					var vid = $("#swipebox-slider .slide.current").find(".swipebox-video-html5");
+					if (vid.length)
+						vid[0].play();
 				}, 0);
 			},
 
