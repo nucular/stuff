@@ -155,8 +155,8 @@ sources.redditBoard = {
                         api = api.replace(new RegExp("\\{" + i + "\\}", "g"), v);
                     });
 
-                    $.jsonp({
-                        url: api,
+                    $.ajax({
+                        url: "//corser.herokuapp.com/" + api,
                         dataType: "json",
                         error: function(xhr, ts, e) {
                             $("#loader").fadeOut("fast", function() {
