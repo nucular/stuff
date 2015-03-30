@@ -1,0 +1,12 @@
+body {
+    padding-bottom: 50px;
+}
+
+#repo-forked {
+    color: #888;
+    margin-right: 15px;
+    font-size: 65%;
+    
+    position: relative;
+    top: -5px;
+}
