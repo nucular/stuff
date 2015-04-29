@@ -1,0 +1,19 @@
+<div class="spinner" ng-if="loading"><i></i></div>
+<div id="gallery">
+  <a ng-href="{{navprev}}" ng-if="shownavprev" class="thumbnail nav prev"><div class="nav-inner"></div></a>
+  <div class="thumbnail" ng-repeat="entry in feed.entry">
+    <a ng-href="{{entry.content.src}}" target="_blank">
+      <img ng-src="{{entry.media$group.media$thumbnail[0].url}}"/>
+    </a>
+    <div class="meta">
+      <a ng-href="https://plus.google.com/u/0/{{entry.author[0].email.$t}}" target="_blank">
+        <img class="profile-thumbnail" ng-src="{{entry.author[0].gphoto$thumbnail.$t}}"/>
+      </a>
+      <div class="meta-inner">
+        <a ng-href="{{entry.link[2].href}}" target="_blank">details</a>
+        <a ng-href="{{entry.link[1].href}}" target="_blank">more</a>
+      </div>
+    </div>
+  </div>
+  <a ng-href="{{navnext}}" ng-if="shownavnext" class="thumbnail nav next"><div class="nav-inner"></div></a>
+</div>
