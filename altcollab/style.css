@@ -1,0 +1,30 @@
+body {
+  background-color: #eee;
+  color: #333;
+  font-family: monospace;
+  text-align: center;
+}
+
+a {
+    color: #0070bb;
+    text-decoration: none;
+}
+a:hover {
+    color: #035;
+}
+
+#screen {
+  color: #f00;
+  cursor: default;
+  border: 2px solid black;
+}
+
+#screen:focus {
+  cursor: none;
+  border: 2px solid red;
+}
+
+
+#connected {
+  display: none;
+}
