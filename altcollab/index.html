@@ -18,7 +18,7 @@
   </div>
 
   <div id="connected">
-    <input type="checkbox" name="force" id="force"><label for="force">force pointer state</label> &middot; <a onclick="client.io.disconnect(); client.io.connect();" href="#">reconnect/redraw</a> &middot; <a onclick="input.command(prompt('enter a qemu command'))" href="#">command</a> (<a onclick="input.command('stop')" href="#">stop</a>/<a onclick="input.command('cont')" href="#">cont</a>, <a onclick="input.command('system_reset')" href="#">system_reset</a>/<a onclick="input.command('system_powerdown')" href="#">system_powerdown</a>, <a onclick="input.command('nmi')" href="#">nmi</a>)<br/>
+    <input type="checkbox" name="force" id="force"><label for="force">force pointer state</label> &middot; <a onclick="client.io.disconnect(); client.io.connect();" href="#">reconnect/redraw</a> &middot; <a onclick="input.command(prompt('enter a qemu command'))" href="#">command</a> (<a onclick="input.command('stop')" href="#">stop</a>/<a onclick="input.command('cont')" href="#">cont</a>, <a onclick="input.command('system_reset')" href="#">system_reset</a>/<a onclick="input.command('system_powerdown')" href="#">system_powerdown</a>, <a onclick="input.command('nmi')" href="#">nmi</a>) &middot; <span id="connections">?</span> connections<br/>
 
     <canvas id="screen" tabindex="0">
       Your browser can't canvas. Stop using fucking IE 6 or whatever that piece of shit you call a browser is.

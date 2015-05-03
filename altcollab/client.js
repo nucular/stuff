@@ -11,7 +11,7 @@
 
   client.config = {
     server: "", // socket.io server
-    delay: 1000 / 30, // delay before trying to draw frame
+    delay: 1000 / 45, // delay before trying to draw frame
     timeout: 100, // timeout before frame is dropped,
     forcefreq: 1000 / 60 // frequency of force pointer events
   }
@@ -57,6 +57,10 @@
         y: rect.y
       });
       setTimeout(client.frame, client.config.delay);
+    });
+
+    client.io.on("connections", function(count) {
+      $("#connections").text(count);
     });
 
     setInterval(client.frame, client.config.delay);
