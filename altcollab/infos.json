@@ -1,5 +1,5 @@
 {
-    "description": "An alternative <a href='https://github.com/kevin-roark/socket.io-computer'>socket.io-computer</a> with more oomph",
+    "description": "An alternative <a href='https://github.com/kevin-roark/socket.io-computer'>socket.io-computer</a> client with more oomph",
     "hidden": false,
     "boring": false,
     "wip": false,
