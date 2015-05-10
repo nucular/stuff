@@ -65,8 +65,8 @@ sources.chan8 = {
                 type = "video";
             }
 
-            var thumburl = "//media.8ch.net/" + board + "/thumb/" + obj.tim + ".jpg";
-            var url = "//media.8ch.net/" + board + "/src/" + obj.tim + obj.ext;
+            var thumburl = "//8ch.net/" + board + "/thumb/" + obj.tim + ".jpg";
+            var url = "//8ch.net/" + board + "/src/" + obj.tim + obj.ext;
 
             return new Thumbnail(type, thumburl, url, obj.tn_w, obj.tn_h);
         }
