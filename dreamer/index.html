@@ -1,0 +1,33 @@
+<html>
+<head>
+  <title>dreamer</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="ui">
+    <h1>dreamer</h1>
+
+    <p>
+      carrier frequency: <span id="carrier-out">100</span> Hz<br/>
+      <input id="carrier-in" type="range" min="10" max="200" value="100"/>
+    </p>
+
+    <p>
+      beat frequency: <span id="beat-out">10</span> Hz<br/>
+      <input id="beat-in" type="range" min="0" max="40" value="10"/><br/>
+    </p>
+
+    <p>
+      <b id="beat-title"></b><br/>
+      <span id="beat-description"></span>
+    </p>
+
+    <input id="toggle" type="button" value="start"/>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
