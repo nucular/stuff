@@ -1,24 +1,33 @@
 body, html {
-  color: #ccc;
+  color: #fff;
   padding: 0px; margin: 0px;
 
   font-family: monospace;
-  font-size: 1rem;
+  font-size: 1.07rem;
+}
+
+a {
+  color: #2290dd;
+  text-decoration: none;
+}
+a:hover {
+  color: #44a0ff;
 }
 
 #ui {
+  position: relative;
+  z-index: 1;
+
   display: block;
   margin-left: auto; margin-right: auto;
 
-  width: 500px;
+  width: 600px;
   max-width: 80%;
+
+  padding: 10px;
 
   background-color: #000;
   border-bottom: 1px solid #333;
-
-  text-align: center;
-  padding: 5px;
-  z-index: 1000;
 }
 
 #canvas {

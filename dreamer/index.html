@@ -6,20 +6,53 @@
 <body>
   <div id="ui">
     <h1>dreamer</h1>
+    
+    <p>
+      Experimental <a href="https://en.wikipedia.org/wiki/Mind_machine">Mind-</a>/<a href="https://en.wikipedia.org/wiki/Dreamachine">Dreamachine</a>
+      and <a href="https://en.wikipedia.org/wiki/Binaural_beats">binaural beats</a> generator. Claims regarding the effects have not been verified, but it's a neat experiment nonetheless.<br/>
+      <b>Headphones required. May be dangerous for people with epilepsy or other nervous disorders.</b>
+    </p>
+    <p>
+      <b>Instructions</b><br/>
+      <ol>
+        <li>put on headphones</li>
+        <li>adjust parameters (especially beat frequency) as desired</li>
+        <li>(optional) play something in the background like music or <a href="http://asoftmurmur.com">this</a></li>
+        <li>click start and then outside this box to hide it</li>
+        <li>switch to fullscreen (F11)</li>
+        <li>(optional) put on a VR device like the <a href="https://www.oculus.com">Rift</a> or <a href="https://www.google.com/get/cardboard">Cardboard</a></li>
+        <li>close your eyes</li>
+      </ol>
+    </p>
 
     <p>
-      carrier frequency: <span id="carrier-out">100</span> Hz<br/>
+      <b>carrier frequency:</b> <span class="carrier-out">100</span> Hz<br/>
       <input id="carrier-in" type="range" min="10" max="200" value="100"/>
     </p>
 
     <p>
-      beat frequency: <span id="beat-out">10</span> Hz<br/>
-      <input id="beat-in" type="range" min="0" max="40" value="10"/><br/>
+      <b>beat frequency:</b> <span class="beat-out">10</span> Hz<br/>
+      <input id="beat-in" type="range" min="1" max="40" value="10"/><br/>
     </p>
 
     <p>
-      <b id="beat-title"></b><br/>
+      <b id="beat-title"></b> waves<br/>
       <span id="beat-description"></span>
+    </p>
+  
+    <p>
+      <input id="visuals-in" type="checkbox" name="visuals" checked/>
+      <label for="visuals"><b>visuals: </b></label>
+      <br/>
+      <input id="colors-in" type="checkbox" name="colors"/>
+      <label for="colors">colors</label>
+      <input id="alternating-in" type="checkbox" name="alternating" checked/>
+      <label for="alternating">alternating</label>
+    </p>
+
+    <p>
+      beat divisor: <span class="beat-out">10</span> / <span class="divisor-out">2</span><br/>
+      <input id="divisor-in" type="range" min="1" max="10" value="2"/><br/>
     </p>
 
     <input id="toggle" type="button" value="start"/>

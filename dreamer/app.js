@@ -7,6 +7,11 @@
   app.carrier = 100;
   app.beat = 10;
 
+  app.visuals = true;
+  app.colors = false;
+  app.alternating = true;
+  app.divisor = 2;
+
   app.starttime = 0;
 
   app.init = function() {
@@ -16,6 +21,11 @@
     app.$canvas = $("#canvas");
     app.$carrier = $("#carrier-in");
     app.$beat = $("#beat-in");
+
+    app.$visuals = $("#visuals-in");
+    app.$colors = $("#colors-in");
+    app.$alternating = $("#alternating-in");
+    app.$divisor = $("#divisor-in");
 
     app.$carrier.on("change", function(e) {
       var v = parseFloat($(this).val());
@@ -27,11 +37,50 @@
       if (v != app.beat)
         app.setFreq(app.carrier, v);
     });
+
+    app.$visuals.on("change", function(e) {
+      var v = this.checked;
+      if (v != app.visuals) {
+        app.visuals = v;
+      }
+    });
+    app.$colors.on("change", function(e) {
+      var v = this.checked;
+      if (v != app.colors) {
+        app.colors = v;
+      }
+    });
+    app.$alternating.on("change", function(e) {
+      var v = this.checked;
+      if (v != app.alternating) {
+        app.alternating = v;
+      }
+    });
+    app.$divisor.on("change", function(e) {
+      var v = parseFloat($(this).val());
+      if (v != app.divisor) {
+        app.divisor = v;
+        $(".divisor-out").text(v);
+      }
+    });
+    app.$canvas.on("mousedown", function(e) {
+      app.$ui.slideToggle();
+    });
     $("#toggle").on("mousedown", function(e) {
       if (app.running)
         app.stop();
       else
         app.start();
+    });
+    var rid;
+    $(window).bind("resize", function(e) {
+      clearTimeout(rid);
+
+      rid = setTimeout(function() {
+        var w = $(document.body).width(), h = $(document.body).height();
+        app.canvas.width = w;
+        app.canvas.height = h;
+      }, 200);
     });
 
     // Video
@@ -53,6 +102,9 @@
     app.gain.connect(app.actx.destination);
 
 
+    var w = $(document.body).width(), h = $(document.body).height();
+    app.canvas.width = w;
+    app.canvas.height = h;
     app.frame();
   }
 
@@ -111,8 +163,8 @@
 
     $("#carrier-in").val(app.carrier);
     $("#beat-in").val(app.beat);
-    $("#carrier-out").text(app.carrier);
-    $("#beat-out").text(app.beat);
+    $(".carrier-out").text(app.carrier);
+    $(".beat-out").text(app.beat);
 
     var title = "";
     var description = "";
@@ -140,12 +192,39 @@
     requestAnimationFrame(app.frame);
 
     app.ctx.clearRect(0, 0, app.canvas.width, app.canvas.height);
-    if (app.running) {
-      var time = (performance ? performance.now() : (new Date()).getTime()) - app.starttime;
-      var period = ((Math.sin((time / 1000) * app.beat * Math.PI) +1)/2);
+    if (app.running && app.visuals) {
+      if (app.alternating) {
+        var time = (performance ? performance.now() : (new Date()).getTime()) - app.starttime;
+        var period1 = ((Math.sin((time / 1000) * (app.beat / app.divisor) * Math.PI) +1)/2);
+        var count1 = (time / 1000) * (app.beat / app.divisor) / 2;
+        var period2 = ((Math.sin((time / 1000) * (app.beat / app.divisor) * Math.PI + Math.PI) +1)/2);
+        var count2 = (time / 1000) * (app.beat / app.divisor) / 2 + 180;
 
-      app.ctx.fillStyle = "rgba(255,255,255, " + period + ")";
-      app.ctx.fillRect(0, 0, app.canvas.width, app.canvas.height);
+        if (app.colors) {
+          app.ctx.fillStyle = "hsla(" + Math.round(count1 % 360) + ",100%,50%," + period1 + ")";
+        } else {
+          app.ctx.fillStyle = "rgba(255,255,255," + period1 + ")";
+        }
+        app.ctx.fillRect(0, 0, app.canvas.width / 2, app.canvas.height);
+
+        if (app.colors) {
+          app.ctx.fillStyle = "hsla(" + Math.round(count2 % 360) + ",100%,50%," + period2 + ")";
+        } else {
+          app.ctx.fillStyle = "rgba(255,255,255," + period2 + ")";
+        }
+        app.ctx.fillRect(app.canvas.width / 2, 0, app.canvas.width / 2, app.canvas.height);
+      } else {
+        var time = (performance ? performance.now() : (new Date()).getTime()) - app.starttime;
+        var period = ((Math.sin((time / 1000) * (app.beat / app.divisor) * Math.PI) +1)/2);
+        var count = (time / 1000) * (app.beat / app.divisor) / 2;
+
+        if (app.colors) {
+          app.ctx.fillStyle = "hsla(" + Math.round(count % 360) + ",100%,50%," + period + ")";
+        } else {
+          app.ctx.fillStyle = "rgba(255,255,255," + period + ")";
+        }
+        app.ctx.fillRect(0, 0, app.canvas.width, app.canvas.height);
+      }
     }
   }
 
