@@ -19,6 +19,8 @@
 
     app.$ui = $("#ui");
     app.$canvas = $("#canvas");
+
+    app.$volume = $("#volume-in");
     app.$carrier = $("#carrier-in");
     app.$beat = $("#beat-in");
 
@@ -27,6 +29,13 @@
     app.$alternating = $("#alternating-in");
     app.$divisor = $("#divisor-in");
 
+    app.$volume.on("change", function(e) {
+      var v = parseFloat($(this).val());
+      if (v != app.gain.gain.value) {
+        app.gain.gain.value = v;
+        $(".volume-out").text(v);
+      }
+    });
     app.$carrier.on("change", function(e) {
       var v = parseFloat($(this).val());
       if (v != app.carrier)
@@ -40,21 +49,18 @@
 
     app.$visuals.on("change", function(e) {
       var v = this.checked;
-      if (v != app.visuals) {
+      if (v != app.visuals)
         app.visuals = v;
-      }
     });
     app.$colors.on("change", function(e) {
       var v = this.checked;
-      if (v != app.colors) {
+      if (v != app.colors)
         app.colors = v;
-      }
     });
     app.$alternating.on("change", function(e) {
       var v = this.checked;
-      if (v != app.alternating) {
+      if (v != app.alternating)
         app.alternating = v;
-      }
     });
     app.$divisor.on("change", function(e) {
       var v = parseFloat($(this).val());

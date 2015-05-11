@@ -4,6 +4,9 @@ body, html {
 
   font-family: monospace;
   font-size: 1.07rem;
+
+  background-color: #000;
+  overflow: hidden;
 }
 
 a {
@@ -23,11 +26,16 @@ a:hover {
 
   width: 600px;
   max-width: 80%;
+  max-height: 100%;
+
+  overflow-y: auto;
 
   padding: 10px;
 
   background-color: #000;
   border-bottom: 1px solid #333;
+
+  box-sizing: border-box;
 }
 
 #canvas {
@@ -39,6 +47,6 @@ a:hover {
   z-index: 0;
 }
 
-input[type=range] {
+.wide {
   width: 100%;
 }

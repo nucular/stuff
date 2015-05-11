@@ -1,6 +1,7 @@
 <html>
 <head>
   <title>dreamer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -24,18 +25,19 @@
         <li>close your eyes</li>
       </ol>
     </p>
+  
+    
 
     <p>
+      <b>volume:</b> <span class="volume-out">0.5</span><br/>
+      <input id="volume-in" type="range" class="wide" min="0" max="1" step="0.01" value="0.5"/>
+
       <b>carrier frequency:</b> <span class="carrier-out">100</span> Hz<br/>
-      <input id="carrier-in" type="range" min="10" max="200" value="100"/>
-    </p>
+      <input id="carrier-in" type="range" class="wide" min="10" max="200" value="100"/>
 
-    <p>
       <b>beat frequency:</b> <span class="beat-out">10</span> Hz<br/>
-      <input id="beat-in" type="range" min="1" max="40" value="10"/><br/>
-    </p>
+      <input id="beat-in" type="range" class="wide" min="1" max="40" value="10"/><br/>
 
-    <p>
       <b id="beat-title"></b> waves<br/>
       <span id="beat-description"></span>
     </p>
@@ -48,11 +50,9 @@
       <label for="colors">colors</label>
       <input id="alternating-in" type="checkbox" name="alternating" checked/>
       <label for="alternating">alternating</label>
-    </p>
 
-    <p>
       beat divisor: <span class="beat-out">10</span> / <span class="divisor-out">2</span><br/>
-      <input id="divisor-in" type="range" min="1" max="10" value="2"/><br/>
+      <input id="divisor-in" type="range" class="wide" min="1" max="10" value="2"/><br/>
     </p>
 
     <input id="toggle" type="button" value="start"/>
