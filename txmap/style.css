@@ -68,20 +68,28 @@ a:hover {
     width: 100%;
 }
 
+#sidebar {
+    display: none;
+    position: absolute;
+    background-color: rgba(40,40,40,0.7);
+    padding: 10px;
+    right: 0px;
+    top: 25px;
+    width: 350px;
+    max-width: 70%;
+    max-height: 80%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
 #tooltip {
     display: none;
     position: absolute;
     background-color: rgba(0,0,0,0.7);
 }
 
-@media (max-width: 1110px) {
-    .powered.by {
-        display: none;
-    }
-}
-
-@media (max-width: 900px) {
-    .written.by {
+@media (max-width: 750px) {
+    .by {
         display: none;
     }
 }

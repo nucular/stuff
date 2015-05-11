@@ -111,22 +111,15 @@ function genericError(e, a, b) {
     setState("start");
 }
 
-function randomRelay(url) {
-    var RELAYS = [
-        ["http://corser.herokuapp.com/", false],
-        ["http://cors-anywhere.herokuapp.com/", false]
-    ]
-    var r = RELAYS[Math.floor(Math.random() * RELAYS.length)];
-    if (r[1])
-        url = encodeURIComponent(url);
-    return r[0] + url;
+function relay(url) {
+    return "https://corser.herokuapp.com/" + url;
 }
 
 function randomComment(subs, success, error) {
     var sub = choice(subs);
 
     $.ajax({
-        url: randomRelay("http://reddit.com/r/" + sub + "/random/.json"
+        url: relay("http://reddit.com/r/" + sub + "/random/.json"
             + "?_=" + Date.now()),
         dataType: "json",
         error: error,
@@ -159,7 +152,7 @@ function randomComment(subs, success, error) {
 
 function permaComment(url, success, error) {
     $.ajax({
-        url: randomRelay(url + "/.json?limit=1"),
+        url: relay(url + "/.json?limit=1"),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {
@@ -184,7 +177,7 @@ function randomImage(subs, success, error) {
     var sub = choice(subs);
 
     $.ajax({
-        url: randomRelay("http://reddit.com/r/" + sub + "/random/.json"
+        url: relay("http://reddit.com/r/" + sub + "/random/.json"
             + "?_=" + Date.now()),
         dataType: "json",
         error: error,
@@ -215,7 +208,7 @@ function randomImage(subs, success, error) {
 
 function permaImage(url, success, error) {
     $.ajax({
-        url: randomRelay(url + "/.json?limit=0"),
+        url: relay(url + "/.json?limit=0"),
         dataType: "json",
         error: error,
         success: function(data, xhr, ts) {

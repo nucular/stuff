@@ -3,9 +3,11 @@ var txmap = {};
 txmap.resizeTimer = 0;
 txmap.addresses = {};
 txmap.mouse = {x: 0, y: 0};
+txmap.selected = undefined;
 
 txmap.init = function() {
     txmap.status = $("#status");
+    txmap.sidebar = $("#sidebar");
     txmap.tooltip = $("#tooltip");
 
     txmap.initGraph();
@@ -18,7 +20,7 @@ txmap.init = function() {
         if (txmap.resizeTimer > 0) {
             txmap.resizeTimer--;
             if (txmap.resizeTimer == 0) {
-                txmap.handleResize();
+                txmap.handleResize(); 
             }
         }
     }, 200);
@@ -104,6 +106,7 @@ txmap.connect = function() {
     var blockchain_channel = pusher.subscribe("blockchain_update_doge");
     blockchain_channel.bind("tx_update", function(data) {
         if (data.type == "tx") {
+            console.log(data.value.tx_hex)
             txmap.fetchTransaction(data.value.txid);
         }
     });
@@ -111,26 +114,54 @@ txmap.connect = function() {
 
 
 txmap.fetchTransaction = function(txid) {
-    txmap.status.text("Fetching transaction: " + txid);
+    txmap.status.html("Fetching transaction: " + txid.substring(0, 10) + "&hellip;");
     jQuery.getJSON("https://chain.so/api/v2/get_tx/DOGE/" + txid,
         function(data, textStatus, jqXHR) {
             txmap.status.text("Connected.");
+
             if (data.status == "success") {
                 txmap.graph.beginUpdate();
+
                 for (var i = 0; i < data.data.inputs.length; i++) {
-                    var inaddr = data.data.inputs[i].address;
-                    txmap.graph.addNode(inaddr);
+                    var input = data.data.inputs[i];
+
+                    var innode = txmap.graph.getNode(input.address);
+                    if (innode) {
+                        innode.data.outtx++;
+                        innode.data.outamt += Number(input.value);
+                    } else {
+                        innode = txmap.graph.addNode(input.address,
+                            {
+                                outtx: 1, outamt: Number(input.value),
+                                intx: 0, outtx: 0
+                            }
+                        );
+                    }
 
                     for (var j = 0; j < data.data.outputs.length; j++) {
-                        var outaddr = data.data.outputs[j].address;
-                        txmap.graph.addNode(outaddr);
-                        if (inaddr != outaddr
-                            && !txmap.graph.hasLink(inaddr, outaddr)
-                            && !txmap.graph.hasLink(outaddr, inaddr)) {
-                            txmap.graph.addLink(inaddr, outaddr);
+                        var output = data.data.outputs[j];
+
+                        var outnode = txmap.graph.getNode(output.address);
+                        if (outnode) {
+                            outnode.data.intx++;
+                            outnode.data.inamt += Number(output.value);
+                        } else {
+                            outnode = txmap.graph.addNode(output.address,
+                                {
+                                    intx: 1, inamt: Number(output.value),
+                                    outtx: 0, outamt: 0
+                                }
+                            );
+                        }
+
+                        if (input.address != output.address
+                            && !txmap.graph.hasLink(input.address, output.address)
+                            && !txmap.graph.hasLink(output.address, input.address)) {
+                            txmap.graph.addLink(input.address, output.address);
                         }
                     }
                 }
+
                 txmap.graph.endUpdate();
             }
         }
@@ -167,8 +198,21 @@ txmap.handleMouseLeave = function(node) {
 }
 
 txmap.handleDoubleClick = function(node) {
-    open("https://chain.so/address/" + node.id);
-}
+    if (node == txmap.selected) {
+        txmap.selected = undefined;
+        txmap.sidebar.fadeOut();
+    } else {
+        txmap.selected = node;
+        $("#address")
+            .text(node.id)
+            .attr("href", "https://chain.so/address/" + node.id);
+        $("#outgoing-amount").text(node.data.outamt);
+        $("#outgoing-tx").text(node.data.outtx);
+        $("#incoming-amount").text(node.data.inamt);
+        $("#incoming-tx").text(node.data.intx);
 
+        txmap.sidebar.fadeIn();
+    }
+}
 
 $(txmap.init);

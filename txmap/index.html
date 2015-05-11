@@ -2,11 +2,11 @@
 <html>
 <head>
     <title>TXMap [beta] &middot; by nucular</title>
-    <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="./style.css">
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="http://js.pusher.com/2.2/pusher.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//js.pusher.com/2.2/pusher.min.js"></script>
     <script src="./vivagraph.min.js"></script>
     <script src="./script.js"></script>
 </head>
@@ -18,6 +18,15 @@
     <span id="status"></span>
 
     <div id="container">
+    </div>
+
+    <div id="sidebar">
+        <span>Address: <a id="address" href=""></a></span><br/>
+        <span>Outgoing: &ETH;<span id="outgoing-amount">0</span> (0 addresses, in <span id="outgoing-tx">0</span> transactions)</span><br/>
+        <span>Incoming: &ETH;<span id="incoming-amount">0</span> (0 addresses, in <span id="incoming-tx">0</span> transactions)</span>
+        <hr/>
+        <ul id="tx-list">
+        </ul>
     </div>
 
     <span id="tooltip"></span>
