@@ -72,11 +72,14 @@
     app.$canvas.on("mousedown", function(e) {
       app.$ui.slideToggle();
     });
-    $("#toggle").on("mousedown", function(e) {
+    $("#start").on("mousedown", function(e) {
       if (app.running)
         app.stop();
       else
         app.start();
+    });
+    $("#hide").on("mousedown", function(e) {
+      app.$ui.slideToggle();
     });
     var rid;
     $(window).bind("resize", function(e) {
