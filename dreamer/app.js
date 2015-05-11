@@ -145,7 +145,7 @@
     app.osc2.start ? app.osc2.start(0) : app.osc2.noteOn(0);
 
     app.starttime = (performance ? performance.now() : (new Date()).getTime());
-    $("#toggle").val("stop");
+    $("#start").val("stop");
   }
 
   app.stop = function() {
@@ -164,7 +164,7 @@
       }
     });
 
-    $("#toggle").val("start");
+    $("#start").val("start");
   }
 
   app.setFreq = function(carrier, beat) {
