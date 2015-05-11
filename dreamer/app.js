@@ -81,6 +81,12 @@
     $("#hide").on("mousedown", function(e) {
       app.$ui.slideToggle();
     });
+    $("#fullscreen").on("mousedown", function(e) {
+      var doc = document.documentElement;
+      (doc.requestFullscreen ? doc.requestFullscreen() :
+        (doc.webkitRequestFullScreen ? doc.webkitRequestFullScreen() :
+          (doc.mozRequestFullScreen ? mozRequestFullScreen() : void(0))));
+    });
     var rid;
     $(window).bind("resize", function(e) {
       clearTimeout(rid);
