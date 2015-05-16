@@ -201,8 +201,7 @@
     for (var i = 0; i < lines.length; i++)
       lines[i] = lines[i].trim();
     lines = lines.filter(Boolean);
-    console.log( "?\n" + lines.join("\n"));
-    //client.io.emit("keydown", "?\n" + lines.join("\n"));
+    client.io.emit("keydown", "?\n" + lines.join("\n"));
   }
 
   input.keyToQemu = function(keycode) {
