@@ -2,6 +2,6 @@
     "description": "See Dogecoin transaction networks unfold in realtime",
     "hidden": false,
     "boring": false,
-    "wip": false,
+    "wip": true,
     "emphasis": false
 }
