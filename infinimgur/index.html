@@ -22,8 +22,8 @@
 
   <section id="view" class="container" infinite-scroll="load()" infinite-scroll-distance="1" infinite-scroll-disabled="loading">
     <div class="thumbnail" ng-repeat="(i,v) in thumbnails" ng-cloak>
-      <a href="{{v.image}}" target="__blank">
-        <img src="{{v.thumbnail}}"/>
+      <a href="{{::v.image}}" target="__blank">
+        <img src="{{::v.thumbnail}}"/>
       </a>
     </div>
   </section>
