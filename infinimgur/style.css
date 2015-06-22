@@ -32,6 +32,10 @@ a {
   }
 }
 
+.thin {
+  font-weight: lighter;
+}
+
 
 .thumbnail {
   float: left;
