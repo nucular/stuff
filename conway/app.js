@@ -19,6 +19,7 @@
 
   app.paused = false;
   app.position = 0;
+  app.interval = null;
 
   app.cells = [];
   app.toolbar = [
@@ -72,6 +73,28 @@
         this.text = app.beats;
         app.setTicks(app.beats * app.signature);
       }
+    },
+    {spacer: true},
+    {
+      text: app.bpm.toString().substr(0, 1), down: false,
+      action: function() {
+        this.text = ((parseInt(this.text) + 1) % 10).toString();
+        app.setBPM(parseInt(app.toolbar[8].text + app.toolbar[9].text + app.toolbar[10].text));
+      }
+    },
+    {
+      text: app.bpm.toString().substr(1, 1), down: false,
+      action: function() {
+        this.text = ((parseInt(this.text) + 1) % 10).toString();
+        app.setBPM(parseInt(app.toolbar[8].text + app.toolbar[9].text + app.toolbar[10].text));
+      }
+    },
+    {
+      text: app.bpm.toString().substr(2, 1), down: false,
+      action: function() {
+        this.text = ((parseInt(this.text) + 1) % 10).toString();
+        app.setBPM(parseInt(app.toolbar[8].text + app.toolbar[9].text + app.toolbar[10].text));
+      }
     }
   ];
 
@@ -90,7 +113,7 @@
     app.setTicks(app.ticks);
 
     base.setFPS(20);
-    setInterval(app.tick, ((1000 * 60) / app.bpm) / app.signature);
+    app.setBPM(app.bpm);
   }
 
   app.update = function(dt) {
@@ -230,13 +253,13 @@
     return app.cells[x][y];
   }
 
-  app.life = function() {
+  app.life = function(x1, y1, x2, y2) {
     var ncells = [];
+    for (var x = 0; x < app.ticks; x++)
+      ncells.push(app.cells[x].slice());
 
-    for (var x = 0; x < app.ticks; x++) {
-      ncells.push([]);
-
-      for (var y = 0; y < app.samples.length; y++) {
+    for (var x = x1 || 0; x < (x2 || app.ticks); x++) {
+      for (var y = y1 || 0; y < (y2 || app.samples.length); y++) {
         var neighbours = 0;
 
         neighbours += app.cell(x-1, y-1);
@@ -250,38 +273,13 @@
         neighbours += app.cell(x+1, y+1);
 
         if (app.cell(x, y))
-          ncells[x].push(app.stayrules[neighbours]);
+          ncells[x][y] = app.stayrules[neighbours];
         else
-          ncells[x].push(app.beginrules[neighbours]);
+          ncells[x][y] = app.beginrules[neighbours];
       }
     }
 
     app.cells = ncells;
-  }
-
-  app.lifeColumn = function(x) {
-    var ncol = [];
-
-    for (var y = 0; y < app.samples.length; y++) {
-      var neighbours = 0;
-
-      neighbours += app.cell(x-1, y-1);
-      neighbours += app.cell(x-1, y);
-      neighbours += app.cell(x-1, y+1);
-      neighbours += app.cell(x, y-1);
-
-      neighbours += app.cell(x, y+1);
-      neighbours += app.cell(x+1, y-1);
-      neighbours += app.cell(x+1, y);
-      neighbours += app.cell(x+1, y+1);
-
-      if (app.cell(x, y))
-        ncol.push(app.stayrules[neighbours]);
-      else
-        ncol.push(app.beginrules[neighbours]);
-    }
-
-    app.cells[x] = ncol;
   }
 
   app.tick = function() {
@@ -296,10 +294,9 @@
     if (app.mode == 1 && app.position == 0) {
       app.life();
     } if (app.mode == 2 && app.position % app.signature == 0) {
-      for (var x = app.position; x < app.position + app.signature; x++)
-        app.lifeColumn(x);
+      app.life(app.position, 0, app.position + app.signature, app.samples.length);
     } else if (app.mode == 3) {
-      app.lifeColumn(app.position);
+      app.life(app.position, 0, app.position + 1, app.samples.length);
     } else if (app.mode == 4) {
       app.life();
     }
@@ -358,6 +355,16 @@
     }
 
     app.resize(base.canvas.width, base.canvas.height);
+  }
+
+  app.setBPM = function(bpm) {
+    app.bpm = bpm;
+    if (app.interval)
+      clearInterval(app.interval);
+    if (bpm > 0)
+      app.interval = setInterval(app.tick, ((1000 * 60) / app.bpm) / app.signature);
+    else
+      app.interval = null;
   }
 
   window.app = app;
