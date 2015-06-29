@@ -9,7 +9,7 @@
   app.samples = new Array(15);
 
   app.bpm = 140;
-  app.mode = 2
+  app.mode = 0;
 
   app.width = app.ticks;
   app.height = app.samples.length + 1;
@@ -23,22 +23,59 @@
   app.cells = [];
   app.toolbar = [
     {
+      text: "\uf04c", fa: true, down: false,
+      action: function() {
+        app.paused = !app.paused;
+        this.text = app.paused ? "\uf04b" : "\uf04c";
+      }
+    },
+    {
       text: app.mode, down: false,
       action: function() {
         app.mode = (app.mode + 1) % 5;
         this.text = app.mode;
       }
+    },
+    {
+      text: "R", down: false,
+      action: function() {
+        app.setRule(prompt(
+          "Enter a Game Of Life ruleset in the form 'begin-neighbours/stay-neighbours':",
+          app.getRule()
+        ));
+      }
+    },
+    {
+      text: "C", down: false,
+      action: function() {
+        for (var x = 0; x < app.ticks; x++) {
+          app.cells[x] = app.cells[x] || [];
+          for (var y = 0; y < app.samples.length; y++) {
+            app.cells[x][y] = false;
+          }
+        }
+      }
+    },
+    {spacer: true},
+    {
+      text: app.signature, down: false,
+      action: function() {
+        app.signature = (app.signature % 8) + 1;
+        this.text = app.signature;
+        app.setTicks(app.beats * app.signature);
+      }
+    },
+    {
+      text: app.beats, down: false,
+      action: function() {
+        app.beats = (app.beats % 8) + 1;
+        this.text = app.beats;
+        app.setTicks(app.beats * app.signature);
+      }
     }
   ];
 
   app.load = function() {
-    for (var x = 0; x < app.ticks; x++) {
-      app.cells.push([]);
-      for (var y = 0; y < app.samples.length; y++) {
-        app.cells[x].push(Math.random() > 0.9);
-      }
-    }
-
     app.actx = new AudioContext();
     for (var y = 0; y < app.samples.length; y++) {
       var audio = new Audio("samples/" + ("00"+y).slice(-2) + ".wav");
@@ -49,8 +86,9 @@
       app.samples[y] = audio;
     }
 
-    app.setRule("2/1");
-    app.resize(base.canvas.width, base.canvas.height);
+    app.setRule("B3/S23");
+    app.setTicks(app.ticks);
+
     base.setFPS(20);
     setInterval(app.tick, ((1000 * 60) / app.bpm) / app.signature);
   }
@@ -96,14 +134,14 @@
         if (app.position == x) {
           l += 20;
         }
-        if (x % 4 == 0) {
+        if (x % app.signature == 0) {
           l += 5;
         }
 
         if (app.mode == 1 && app.position == 0)
           s += 50;
-        else if (app.mode == 2 && app.position % app.SIGNATURE == 0
-          && x < app.position + 4
+        else if (app.mode == 2 && app.position % app.signature == 0
+          && x < app.position + app.signature
           && x >= app.position)
           s += 50;
         else if (app.mode == 3 && app.position == x)
@@ -120,6 +158,8 @@
 
     for (var x = 0; x < app.toolbar.length; x++) {
       var entry = app.toolbar[x];
+      if (entry.spacer) continue;
+
       var h = 0, s = 0, l = 20;
 
       if (entry.down)
@@ -130,8 +170,13 @@
       ctx.fillRect(cell.x, cell.y, app.scale - 1, app.scale - 1);
 
       ctx.fillStyle = "#fff";
-      ctx.font = Math.floor(app.scale) + "px monospace";
-      ctx.fillText(entry.text, cell.x + app.scale*0.2, cell.y + app.scale*0.8);
+      if (entry.fa) {
+        ctx.font = Math.floor(app.scale * 0.55) + "px FontAwesome";
+        ctx.fillText(entry.text, cell.x + app.scale*0.25, cell.y + app.scale*0.7);
+      } else {
+        ctx.font = Math.floor(app.scale * 0.8) + "px monospace";
+        ctx.fillText(entry.text, cell.x + app.scale*0.25, cell.y + app.scale*0.75);
+      }
     }
 
     ctx.restore();
@@ -150,6 +195,21 @@
   }
 
   app.mousereleased = function(b, x, y) {
+    var cell = app.togrid(x, y);
+    if (cell.x < 0 || cell.y < 0 || cell.x >= app.width) return false;
+
+    if (cell.y < app.samples.length) {
+      //
+    } else if (cell.x < app.toolbar.length && cell.y < app.height) {
+      var entry = app.toolbar[cell.x];
+      if (entry.down) {
+        entry.down = false;
+        entry.action.apply(entry);
+      }
+    }
+  }
+
+  app.mousemoved = function(x, y) {
     var cell = app.togrid(x, y);
     if (cell.x < 0 || cell.y < 0 || cell.x >= app.width) return false;
 
@@ -268,6 +328,36 @@
 
     app.beginrules = begin;
     app.stayrules = stay;
+  }
+
+  app.getRule = function() {
+    var begin = "B";
+    for (var i = 0; i < app.beginrules.length; i++) {
+      if (app.beginrules[i])
+        begin += i;
+    }
+
+    var stay = "S";
+    for (var i = 0; i < app.stayrules.length; i++) {
+      if (app.stayrules[i])
+        stay += i;
+    }
+
+    return begin + "/" + stay;
+  }
+
+  app.setTicks = function(t) {
+    app.ticks = t;
+    app.width = Math.max(t, app.toolbar.length);
+
+    for (var x = 0; x < app.ticks; x++) {
+      app.cells[x] = app.cells[x] || [];
+      for (var y = 0; y < app.samples.length; y++) {
+        app.cells[x][y] = app.cells[x][y] || false;
+      }
+    }
+
+    app.resize(base.canvas.width, base.canvas.height);
   }
 
   window.app = app;
