@@ -112,7 +112,7 @@
     app.setRule("B3/S23");
     app.setTicks(app.ticks);
 
-    base.setFPS(20);
+    base.setFPS(60);
     app.setBPM(app.bpm);
   }
 
