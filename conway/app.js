@@ -7,7 +7,9 @@
 
   app.WIDTH = app.BEATS * app.SIGNATURE;
   app.HEIGHT = 15;
-  app.BPM = 100;
+  app.BPM = 140;
+
+  app.MODE = 2
 
   app.position = 0;
 
@@ -16,10 +18,11 @@
     for (var x = 0; x < app.WIDTH; x++) {
       app.cells.push([]);
       for (var y = 0; y < app.HEIGHT; y++) {
-        app.cells[x].push(Math.random() >= 0.8);
+        app.cells[x].push(Math.random() > 0.8);
       }
     }
-    app.rule("23/3");
+
+    app.rule("1/23");
 
     app.actx = new AudioContext();
     
@@ -63,12 +66,38 @@
           l += 5;
         }
 
+        if (app.MODE == 1 && app.position == 0)
+          s += 50;
+        else if (app.MODE == 2 && app.position % app.SIGNATURE == 0
+          && x < app.position + 4
+          && x >= app.position)
+          s += 50;
+        else if (app.MODE == 3 && app.position == x)
+          s += 50;
+        else if (app.MODE == 4)
+          s += 50;
+
         ctx.fillStyle = "hsl(" + h + ", " + s + "%, " + l + "%)";
         ctx.fillRect(x * cs, y * cs, cs - 1, cs - 1);
       }
     }
 
+    ctx.fillStyle = "#fff";
+    ctx.font = (cs / 2) + "px monospace";
+    ctx.fillText("hi", cs/10, cs*15.4);
+
     ctx.restore();
+  }
+
+  app.mousepressed = function(b, x, y) {
+    // Coordinate projections suck
+    var cx = x - (base.canvas.width / 2);
+    var cy = y - (base.canvas.height / 2);
+    var s = Math.min(base.canvas.width, base.canvas.height);
+    cx = Math.floor((cx + s/2) / Math.min(s / app.WIDTH, s / app.HEIGHT));
+    cy = Math.floor((cy + s/2) / Math.min(s / app.WIDTH, s / app.HEIGHT));
+
+    app.cells[cx][cy] = !app.cells[cx][cy];
   }
 
   app.cell = function(x, y) {
@@ -97,9 +126,9 @@
         neighbours += app.cell(x+1, y+1);
 
         if (app.cells[x][y])
-          ncells[x].push(!app.deathrules[neighbours]);
+          ncells[x].push(app.stayrules[neighbours]);
         else
-          ncells[x].push(app.birthrules[neighbours]);
+          ncells[x].push(app.beginrules[neighbours]);
       }
     }
 
@@ -123,9 +152,9 @@
       neighbours += app.cell(x+1, y+1);
 
       if (app.cells[x][y])
-        ncol.push(!app.deathrules[neighbours]);
+        ncol.push(app.stayrules[neighbours]);
       else
-        ncol.push(app.birthrules[neighbours]);
+        ncol.push(app.beginrules[neighbours]);
     }
 
     app.cells[x] = ncol;
@@ -135,6 +164,16 @@
     app.position++;
     if (app.position >= app.WIDTH) {
       app.position = 0;
+    }
+
+    if (app.MODE == 1 && app.position == 0) {
+      app.life();
+    } if (app.MODE == 2 && app.position % app.SIGNATURE == 0) {
+      for (var x = app.position; x < app.position + app.SIGNATURE; x++)
+        app.lifecol(x);
+    } else if (app.MODE == 3) {
+      app.lifecol(app.position);
+    } else if (app.MODE == 4) {
       app.life();
     }
 
@@ -149,16 +188,18 @@
   app.rule = function(r) {
     var s = r.split("/");
 
-    var death = [true, true, true, true, true, true, true, true, true];
-    var birth = [false, false, false, false, false, false, false, false, false];
+    var begin = [false, false, false, false, false, false, false, false, false];
+    var stay = [false, false, false, false, false, false, false, false, false];
 
-    for (var i = 0; i < s[0].length; i++)
-      death[parseInt(s[0][i])] = false;
-    for (var i = 0; i < s[1].length; i++)
-      birth[parseInt(s[1][i])] = true;
+    for (var i = 0; i < s[0].length; i++) {
+      begin[parseInt(s[0][i])] = true;
+    }
+    for (var i = 0; i < s[1].length; i++) {
+      stay[parseInt(s[1][i])] = true;
+    }
 
-    app.deathrules = death;
-    app.birthrules = birth;
+    app.beginrules = begin;
+    app.stayrules = stay;
   }
 
   window.app = app;
