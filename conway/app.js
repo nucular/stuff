@@ -21,34 +21,76 @@
   app.position = 0;
   app.interval = null;
 
+  app.ToolbarEntry = function(text, func) {
+    this.text = text;
+    this.func = func;
+    if (typeof text == "function") {
+      Object.defineProperty(this, "text", {
+        get: text
+      });
+    } else {
+      this.fontawesome = text.charCodeAt(0) >= 0xf000;
+    }
+    this.down = false;
+  }
+
+  app.ToolbarSpacer = function() {
+    this.text = "";
+    this.func = function() {}
+    this.down = false;
+  }
+
   app.cells = [];
   app.toolbar = [
-    {
-      text: "\uf04c", fa: true, down: false,
-      action: function() {
+    new app.ToolbarEntry(function() {
+      this.fontawesome = true;
+      return app.paused ? "\uf04b" : "\uf04c";
+    }, function(b) {
+      if (b == "l") {
         app.paused = !app.paused;
-        this.text = app.paused ? "\uf04b" : "\uf04c";
+      } else if (b == "r") {
+        app.paused = false;
+        app.tick();
+        app.paused = true;
+      } else if (b == "wu" && app.position < app.ticks-1) {
+        app.position++;
+      } else if (b == "wd" && app.position > 0) {
+        app.position--;
       }
-    },
-    {
-      text: app.mode, down: false,
-      action: function() {
+    }),
+    new app.ToolbarEntry(function() {
+      return app.mode
+    }, function(b) {
+      if (b == "l") {
         app.mode = (app.mode + 1) % 5;
-        this.text = app.mode;
+      } else if (b == "wu" && app.mode < 4) {
+        app.mode++;
+      } else if (b == "wd" && app.mode > 0) {
+        app.mode--;
+      } else if (b == "r") {
+        var mode = parseInt(prompt("Enter a Game Of Life mode between 0 and 4:\n"
+          + "0 = GOL disabled\n"
+          + "1 = entire board, every cycle\n"
+          + "2 = every beat separate\n"
+          + "3 = every tick separate\n"
+          + "4 = entire board, every tick",
+          app.mode));
+        if (mode >= 0 && mode <= 4)
+          app.mode = mode;
       }
-    },
-    {
-      text: "R", down: false,
-      action: function() {
-        app.setRule(prompt(
+    }),
+    new app.ToolbarEntry("R", function(b) {
+      if (b == "l" || b == "r") {
+        var rule = prompt(
           "Enter a Game Of Life ruleset in the form 'begin-neighbours/stay-neighbours':",
           app.getRule()
-        ));
-      }
-    },
-    {
-      text: "C", down: false,
-      action: function() {
+        );
+        if (rule)
+          app.setRule(rule);
+        }
+    }),
+    new app.ToolbarEntry("C", function(b) {
+      if (b == "l" || b == "r") {
         for (var x = 0; x < app.ticks; x++) {
           app.cells[x] = app.cells[x] || [];
           for (var y = 0; y < app.samples.length; y++) {
@@ -56,46 +98,113 @@
           }
         }
       }
-    },
-    {spacer: true},
-    {
-      text: app.signature, down: false,
-      action: function() {
+    }),
+
+    new app.ToolbarSpacer(),
+
+    new app.ToolbarEntry(function() {
+      return app.signature;
+    }, function(b) {
+      if (b == "r") {
+        var signature = parseInt(prompt(
+          "Enter the number of ticks per beat:",
+          app.signature)
+        );
+        if (signature) {
+          app.signature = signature;
+        }
+      } else if (b == "l") {
         app.signature = (app.signature % 8) + 1;
-        this.text = app.signature;
-        app.setTicks(app.beats * app.signature);
+      } else if (b == "wu" && app.beats < 8) {
+        app.signature++;
+      } else if (b == "wd" && app.signature > 1) {
+        app.signature--;
       }
-    },
-    {
-      text: app.beats, down: false,
-      action: function() {
+      app.setTicks(app.beats * app.signature);
+    }),
+    new app.ToolbarEntry(function() {
+      return app.beats;
+    }, function(b) {
+      if (b == "r") {
+        var beats = parseInt(prompt(
+          "Enter the number of beats:",
+          app.beats)
+        );
+        if (beats) {
+          app.beats = beats;
+        }
+      } else if (b == "l") {
         app.beats = (app.beats % 8) + 1;
-        this.text = app.beats;
-        app.setTicks(app.beats * app.signature);
+      } else if (b == "wu" && app.beats < 8) {
+        app.beats++;
+      } else if (b == "wd" && app.beats > 1) {
+        app.beats--;
       }
-    },
-    {spacer: true},
-    {
-      text: app.bpm.toString().substr(0, 1), down: false,
-      action: function() {
-        this.text = ((parseInt(this.text) + 1) % 10).toString();
-        app.setBPM(parseInt(app.toolbar[8].text + app.toolbar[9].text + app.toolbar[10].text));
+      app.setTicks(app.beats * app.signature);
+    }),
+
+    new app.ToolbarSpacer(),
+
+    new app.ToolbarEntry(function() {
+      return Math.floor(app.bpm / 100) % 10;
+    }, function(b) {
+      var digit = Math.floor(app.bpm / 100) % 10;
+      if (b == "l") {
+        digit = (digit + 1) % 10;
+      } else if (b == "r") {
+        var bpm = parseInt(prompt("Enter the Beats per Minute:", app.bpm));
+        if (!isNaN(bpm) && bpm >= 0 && bpm <= 999)
+          app.setBPM(bpm);
+        return;
+      } else if (b == "wu" && digit < 9) {
+        digit++;
+      } else if (b == "wd" && digit > 0) {
+        digit--;
       }
-    },
-    {
-      text: app.bpm.toString().substr(1, 1), down: false,
-      action: function() {
-        this.text = ((parseInt(this.text) + 1) % 10).toString();
-        app.setBPM(parseInt(app.toolbar[8].text + app.toolbar[9].text + app.toolbar[10].text));
+      app.setBPM(digit * 100
+        + (Math.floor(app.bpm / 10) % 10) * 10
+        + (Math.floor(app.bpm / 1) % 10) * 1);
+    }),
+    new app.ToolbarEntry(function() {
+      return Math.floor(app.bpm / 10) % 10;
+    }, function(b) {
+      var digit = Math.floor(app.bpm / 10) % 10;
+      if (b == "l") {
+        digit = (digit + 1) % 10;
+      } else if (b == "r") {
+        var bpm = parseInt(prompt("Enter the Beats per Minute:", app.bpm));
+        if (!isNaN(bpm) && bpm >= 0 && bpm <= 999)
+          app.setBPM(bpm);
+        return;
+      } else if (b == "wu" && digit < 9) {
+        digit++;
+      } else if (b == "wd" && digit > 0) {
+        digit--;
       }
-    },
-    {
-      text: app.bpm.toString().substr(2, 1), down: false,
-      action: function() {
-        this.text = ((parseInt(this.text) + 1) % 10).toString();
-        app.setBPM(parseInt(app.toolbar[8].text + app.toolbar[9].text + app.toolbar[10].text));
+      app.setBPM((Math.floor(app.bpm / 100) % 10) * 100
+        + digit * 10
+        + (Math.floor(app.bpm / 1) % 10) * 1);
+    }),
+    new app.ToolbarEntry(function() {
+      return Math.floor(app.bpm / 1) % 10;
+    }, function(b) {
+      var digit = Math.floor(app.bpm / 1) % 10;
+      if (b == "l") {
+        digit = (digit + 1) % 10;
+      } else if (b == "r") {
+        var bpm = parseInt(prompt("Enter the Beats per Minute:", app.bpm));
+        if (!isNaN(bpm) && bpm >= 0 && bpm <= 999)
+          app.setBPM(bpm);
+        return;
+      } else if (b == "wu" && digit < 9) {
+        digit++;
+      } else if (b == "wd" && digit > 0) {
+        digit--;
       }
-    }
+      app.setBPM((Math.floor(app.bpm / 100) % 10) * 100
+        + (Math.floor(app.bpm / 10) % 10) * 10
+        + digit);
+    }),
   ];
 
   app.load = function() {
@@ -146,6 +255,8 @@
   app.draw = function(ctx, w, h, s) {
     ctx.save();
 
+    var mouse = app.togrid(base.mouse.x, base.mouse.y);
+
     for (var x = 0; x < app.ticks; x++) {
       for (var y = 0; y < app.samples.length; y++) {
         var h = (y / app.samples.length)*180, s = 0, l = 10;
@@ -172,6 +283,11 @@
         else if (app.mode == 4)
           s += 50;
 
+        if (x == mouse.x && y == mouse.y) {
+          l += 10;
+          s += 15;
+        }
+
         var cell = app.fromgrid(x, y);
 
         ctx.fillStyle = "hsl(" + h + ", " + s + "%, " + l + "%)";
@@ -179,26 +295,35 @@
       }
     }
 
-    for (var x = 0; x < app.toolbar.length; x++) {
+    for (var x = 0; x < app.width; x++) {
       var entry = app.toolbar[x];
-      if (entry.spacer) continue;
+      if (app.ToolbarSpacer.prototype.isPrototypeOf(entry))
+        entry = null;
 
-      var h = 0, s = 0, l = 20;
+      var h = 0, s = 0, l = 15;
 
-      if (entry.down)
-        l += 10;
+      if (entry) {
+        if (entry.down)
+          l += 10;
+        if (mouse.y == app.height - 1 && x == mouse.x)
+          l += 10;
+      } else {
+        l = 10;
+      }
 
-      var cell = app.fromgrid(x, app.height - 1);
+      var cell = app.fromgrid(Math.floor(x), app.height - 1);
       ctx.fillStyle = "hsl(" + h + ", " + s + "%, " + l + "%)";
       ctx.fillRect(cell.x, cell.y, app.scale - 1, app.scale - 1);
 
-      ctx.fillStyle = "#fff";
-      if (entry.fa) {
-        ctx.font = Math.floor(app.scale * 0.55) + "px FontAwesome";
-        ctx.fillText(entry.text, cell.x + app.scale*0.25, cell.y + app.scale*0.7);
-      } else {
-        ctx.font = Math.floor(app.scale * 0.8) + "px monospace";
-        ctx.fillText(entry.text, cell.x + app.scale*0.25, cell.y + app.scale*0.75);
+      if (entry) {
+        ctx.fillStyle = "#fff";
+        if (entry.fontawesome) {
+          ctx.font = Math.floor(app.scale * 0.55) + "px FontAwesome";
+          ctx.fillText(entry.text, cell.x + app.scale*0.25, cell.y + app.scale*0.7);
+        } else {
+          ctx.font = Math.floor(app.scale * 0.8) + "px monospace";
+          ctx.fillText(entry.text, cell.x + app.scale*0.25, cell.y + app.scale*0.75);
+        }
       }
     }
 
@@ -209,9 +334,9 @@
     var cell = app.togrid(x, y);
     if (cell.x < 0 || cell.y < 0 || cell.x >= app.width) return false;
 
-    if (cell.y < app.samples.length) {
+    if (cell.y < app.samples.length && b == "l") {
       app.cells[cell.x][cell.y] = !app.cells[cell.x][cell.y];
-    } else if (cell.x < app.toolbar.length && cell.y < app.height) {
+    } else if (cell.x < app.toolbar.length && cell.y == app.height - 1) {
       var entry = app.toolbar[cell.x];
       entry.down = true;
     }
@@ -227,23 +352,18 @@
       var entry = app.toolbar[cell.x];
       if (entry.down) {
         entry.down = false;
-        entry.action.apply(entry);
+        entry.func.apply(entry, [b]);
       }
     }
   }
 
   app.mousemoved = function(x, y) {
     var cell = app.togrid(x, y);
-    if (cell.x < 0 || cell.y < 0 || cell.x >= app.width) return false;
 
-    if (cell.y < app.samples.length) {
-      //
-    } else if (cell.x < app.toolbar.length && cell.y < app.height) {
-      var entry = app.toolbar[cell.x];
-      if (entry.down) {
+    for (var x = 0; x < app.toolbar.length; x++) {
+      var entry = app.toolbar[x];
+      if (entry.down && (cell.x != x || cell.y != app.samples.length))
         entry.down = false;
-        entry.action.apply(entry);
-      }
     }
   }
 

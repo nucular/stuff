@@ -59,7 +59,7 @@
           b = "r"; break;
       }
       if (app.mousepressed)
-        app.mousepressed(b, base.mouse.x, base.mouse.y)
+        return app.mousepressed(b, base.mouse.x, base.mouse.y);
 
     // base.mousereleased
     }).bind("mouseup", function(e) {
@@ -73,7 +73,7 @@
           b = "r"; break;
       }
       if (app.mousereleased)
-        app.mousereleased(b, base.mouse.x, base.mouse.y)
+        return app.mousereleased(b, base.mouse.x, base.mouse.y);
 
     // base.mousepressed mousewheel events
     }).bind("mousewheel", function(e) {
@@ -84,6 +84,9 @@
         if (app.mousepressed) app.mousepressed("wd", base.mouse.x, base.mouse.y);
         if (app.mousereleased) app.mousereleased("wd", base.mouse.x, base.mouse.y);
       }
+
+    }).bind("contextmenu", function(e) {
+      e.preventDefault();
     });
 
     app.load();
