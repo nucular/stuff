@@ -86,7 +86,10 @@ app.factory("MultiFusk", function($q, ImgurRequest) {
 
   MultiFusk.prototype.next = function() {
     var that = this;
-    var id = Math.random().toString(36).substr(2, 5);
+    if (Math.random() > 0.5)
+      var id = Math.random().toString(36).substr(2, 5);
+    else
+      var id = Math.random().toString(36).substr(2, 7);
 
     (new ImgurRequest(id)).get()
       .then(function(req) {
@@ -130,6 +133,37 @@ app.controller("RouletteCtrl", function($scope, MultiFusk) {
       $scope.loading = false;
     });
   }
+
+  $scope.shrink = function(thumb)
+  {
+    var img = thumb.find("img");
+    var id = thumb.attr("id");
+    thumb.removeClass("expanded z-2");
+    img.attr("src", "//i.imgur.com/" + id + "s.jpg");
+  }
+
+  $scope.expand = function(thumb)
+  {
+    $scope.shrink($(".thumbnail.expanded"));
+    var img = thumb.find("img");
+    var id = thumb.attr("id");
+    thumb.addClass("expanded z-2");
+    img.attr("src", "//i.imgur.com/" + id + ".png");
+  }
+
+  $scope.toggle = function($event) {
+    if ($event.currentTarget)
+      var target = $($event.currentTarget);
+    else
+      var target = $event;
+
+    if (target.hasClass("expanded")) {
+      $scope.shrink(target);
+    } else {
+      $scope.expand(target);
+    }
+    $.scrollTo(target.position().top - 64, 200);
+  }
 });
 
 app.controller("StatsCtrl", function($scope, ImgurStats) {
@@ -141,4 +175,41 @@ app.run(function(ImgurStats) {
   setInterval(function() {
     ImgurStats.updateRPS();
   }, 1000);
+
+
+
+  $(window).on("keydown", function(e) {
+    e.preventDefault();
+
+    var thumb = $(".thumbnail.expanded");
+    if (thumb.length) {
+      var prev = thumb.prev();
+      var next = thumb.next();
+    } else {
+      var prev = [];
+      var next = $($(".thumbnail")[0]);
+    }
+
+    if (e.which == 37 && prev.length) {
+      prev.click();
+    } else if (e.which == 39 && next.length) {
+      next.click();
+    }
+  }).on("swipeleft", function(e) {
+    var thumb = $(".thumbnail.expanded");
+    if (thumb.length) {
+      var next = thumb.next();
+    } else {
+      var next = $($(".thumbnail")[0]);
+    }
+    if (next.length)
+      next.click();
+  }).on("swiperight", function(e) {
+    var thumb = $(".thumbnail.expanded");
+    if (thumb.length) {
+      var prev = thumb.prev();
+      if (prev.length)
+        prev.click();
+    }
+  });
 });

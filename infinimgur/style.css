@@ -12,6 +12,22 @@ a {
   color: inherit;
 }
 
+.z-1 {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+.z-2 {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.z-3 {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+.z-4 {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+.z-5 {
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+}
+
 .container {
   margin-right: auto;
   margin-left: auto;
@@ -37,20 +53,6 @@ a {
 }
 
 
-.thumbnail {
-  float: left;
-  display: inline-block;
-  width: 90px;
-  height: 90px;
-}
-
-#view {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-}
-
-
 .toolbar, .toolbar-spacer {
   display: block;
   width: 100%;
@@ -58,10 +60,9 @@ a {
 }
 .toolbar {
   position: fixed;
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.14),0 2px 2px 0 rgba(0,0,0,.098),0 1px 5px 0 rgba(0,0,0,.084);
-  
   color: #fff;
   background-color: #455A64;
+  z-index: 9;
 }
 
 .toolbar .container {
@@ -72,6 +73,45 @@ a {
 
 .toolbar h1 {
   display: inline-block;
+}
+
+
+.thumbnail {
+  float: left;
+  display: inline-block;
+  width: 90px;
+  height: 90px;
+  cursor: pointer;
+  transition: height 0.2s ease, background-color 0.3s ease;
+}
+.thumbnail.expanded {
+  float: none;
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 90px;
+  max-height: calc(95vh - 64px);
+  background-color: #cfd8dc;
+  z-index: 8;
+  transition: height 0.2s ease, background-color 0.3s ease;
+}
+
+.thumbnail img {
+  transition: width 0.2s ease, height 0.2s ease;
+}
+.thumbnail.expanded img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
+  max-height: calc(95vh - 64px);
+  height: auto;
+}
+
+#view {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
 }
 
 
@@ -122,4 +162,9 @@ a {
     left: 100%;
     width: 0%;
   }
+}
+
+
+.scrollspacer {
+  height: calc(100% - 64px);
 }
