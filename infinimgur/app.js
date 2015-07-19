@@ -195,7 +195,10 @@ app.run(function(ImgurStats) {
     } else if (e.which == 39 && next.length) {
       next.click();
     }
-  }).on("swipeleft", function(e) {
+  });
+
+  $("#view").on("swipeleft", ".thumbnail.expanded", function(e) {
+    console.log("hi");
     var thumb = $(".thumbnail.expanded");
     if (thumb.length) {
       var next = thumb.next();
@@ -205,6 +208,7 @@ app.run(function(ImgurStats) {
     if (next.length)
       next.click();
   }).on("swiperight", function(e) {
+    console.log("hi");
     var thumb = $(".thumbnail.expanded");
     if (thumb.length) {
       var prev = thumb.prev();
