@@ -165,6 +165,6 @@ a {
 }
 
 
-.scrollspacer {
+.scroll-spacer {
   height: calc(100% - 64px);
 }
