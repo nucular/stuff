@@ -41,6 +41,10 @@ function spawnCircle(x, y, r) {
     })
     .on("mousedown", function(e) {
       hitflag = true;
+      $("#lasthit").show().css({
+        "left": mouse.x - $("#lasthit").width()/2,
+        "top": mouse.y - $("#lasthit").height()/2
+      });
       energy = 1;
       score += 1;
       if (score == 20)
@@ -100,10 +104,6 @@ $(function() {
     if (ingame && !hitflag) {
       endGame();
     }
-    $("#lasthit").show().css({
-      "left": e.pageX - $("#lasthit").width()/2,
-      "top": e.pageY - $("#lasthit").height()/2
-    });
     hitflag = false;
   });
   $("body").on("mousemove", function(e) {
