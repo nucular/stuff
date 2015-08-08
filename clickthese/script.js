@@ -49,10 +49,10 @@ function spawnCircle(x, y, r) {
       score += 1;
       if (score == 20)
         setCursor(false);
-      if (score == 30)
+      /*if (score == 30)
         $("#game").addClass("rotating");
       if (score == 50)
-        $("#game").addClass("fast");
+        $("#game").addClass("fast");*/
       $("#score").text(score);
       $(this).remove();
     })
@@ -77,7 +77,7 @@ function startGame() {
 
 function endGame() {
   clearInterval(circleint);
-  $("#game").removeClass("rotating").removeClass("fast").hide();
+  $("#game").hide();//removeClass("rotating").removeClass("fast");
   $("#game > .circle").remove();
   $("#container").show();
   setCursor(true);
