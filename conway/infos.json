@@ -1,5 +1,5 @@
 {
-    "description": "Cellular automata/drum machine",
+    "description": "Game Of Life on a drum machine",
     "hidden": false,
     "boring": false,
     "wip": true,

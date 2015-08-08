@@ -2,6 +2,6 @@
     "description": "Play music on your LCD monitor",
     "hidden": false,
     "boring": false,
-    "wip": true,
+    "wip": false,
     "emphasis": false
 }

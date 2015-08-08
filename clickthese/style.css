@@ -1,0 +1,85 @@
+html, body {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  font-family: sans-serif;
+  color: #fff;
+  background-color: #333;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nocursor {
+  cursor: none;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  z-index: 0;
+}
+
+#game {
+  height: 100%; width: 100%;
+  position: absolute;
+  top: 0px; left: 0px;
+}
+
+#score {
+  margin: 20px;
+}
+
+.circle {
+  border-radius: 50%;
+  display: inline-block;
+  width: 25vmin;
+  height: 25vmin;
+  background-color: #fff;
+  color: #000;
+  z-index: 1;
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+}
+
+.nocursor .circle {
+  cursor: none;
+}
+
+.circle:visited {
+  background-color: #333;
+}
+
+.spinner {
+  z-index: 9999;
+}
+.spinner i {
+  display: inline-block;
+  height: 5px;
+  width: 0%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  background-color: #fff;
+  transition: width 0.3s ease;
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+}
+
+.rotating {
+  -webkit-animation: rotate 20s linear infinite;
+  -moz-animation: rotate 20s linear infinite;
+  animation: rotate 20s linear infinite;
+}
+
+.rotating.fast {
+  -webkit-animation-duration: 10s;
+  -moz-animation-duration: 10s;
+  animation-duration: 10s;
+}
+
+@-moz-keyframes rotate { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes rotate { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes rotate { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
