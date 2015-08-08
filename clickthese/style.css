@@ -43,14 +43,24 @@ html, body {
   color: #000;
   z-index: 1;
   box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
 }
-
 .nocursor .circle {
   cursor: none;
 }
 
-.circle:visited {
-  background-color: #333;
+.square {
+  display: inline-block;
+  width: 25vmin;
+  height: 25vmin;
+  background-color: #fff;
+  color: #000;
+  z-index: 1;
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+.nocursor .square {
+  cursor: none;
 }
 
 #lasthit {
