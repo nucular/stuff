@@ -13,9 +13,9 @@ var mouse = {
 
 function setCursor(state) {
   if (state)
-    $("#game").removeClass("nocursor");
+    $("body").removeClass("nocursor");
   else
-    $("#game").addClass("nocursor");
+    $("body").addClass("nocursor");
 }
 
 function updateEnergy() {
@@ -23,7 +23,7 @@ function updateEnergy() {
     energy -= (1-(1/score))*0.1;
     if (energy <= 0) endGame();
     if (score >= 10 && score < 20)
-      setCursor($("#game").hasClass("nocursor"));
+      setCursor($("body").hasClass("nocursor"));
   }
   
   $("#energy").css("width", (energy * 100) + "%");
@@ -45,9 +45,9 @@ function spawnCircle(x, y, r) {
       score += 1;
       if (score == 20)
         setCursor(false);
-      if (score == 40)
+      if (score == 30)
         $("#game").addClass("rotating");
-      if (score == 70)
+      if (score == 50)
         $("#game").addClass("fast");
       $("#score").text(score);
       $(this).remove();
@@ -100,6 +100,10 @@ $(function() {
     if (ingame && !hitflag) {
       endGame();
     }
+    $("#lasthit").show().css({
+      "left": e.pageX - $("#lasthit").width()/2,
+      "top": e.pageY - $("#lasthit").height()/2
+    });
     hitflag = false;
   });
   $("body").on("mousemove", function(e) {
