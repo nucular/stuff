@@ -93,11 +93,11 @@ sources.chan8 = {
 
 sources.chan4 = {
     url: /boards\.4chan\.org\/(\w+)\/thread\/(\d+)/,
-    api: "boards.4chan.org/{1}/thread/{2}.json",
+    api: "a.4cdn.org/{1}/thread/{2}.json",
     parser: function(match, data) {
         var board = match[1];
         var id = match[2];
-        var rows = new Row();
+        var row = new Row();
 
         var thumb = function(obj) {
             var type = "image";
@@ -108,7 +108,7 @@ sources.chan4 = {
             var thumburl = "//1.t.4cdn.org/" + board + "/" + obj.tim + "s.jpg";
             var url = "//i.4cdn.org/" + board + "/" + obj.tim + obj.ext;
 
-            return new Thumbnail(type, thumburl, url, obj.tn_w, obj.tn_h);
+            return new Thumbnail(type, thumburl, url);
         }
 
         $.each(data.posts, function(i, v) {
