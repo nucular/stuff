@@ -86,7 +86,7 @@ app.factory("MultiFusk", function($q, ImgurRequest) {
 
   MultiFusk.prototype.next = function() {
     var that = this;
-    if (Math.random() > 0.5)
+    if (Math.random() > 0.2)
       var id = Math.random().toString(36).substr(2, 5);
     else
       var id = Math.random().toString(36).substr(2, 7);
