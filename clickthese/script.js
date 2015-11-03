@@ -23,56 +23,6 @@ function setTimeoutInterval(func, interval, timeout) {
   }, timeout);
 }
 
-var nerfs = [
-  {
-    score: 0,
-    func: function() {
-      energy *= 0.7;
-    }
-  },
-  {
-    score: 15,
-    func: function() {
-      setTimeoutInterval(function() {
-        var cs = $("#game .circle");
-        for (var i = 0; i < cs.length; i++) {
-          var $c = $(cs[i]);
-          var x = Math.random() * 0.6;
-          var y = Math.random() * 0.6;
-          $c.css({
-            left: x*100 + "%",
-            top: y*100 + "%"
-          })
-        }
-      }, 1000/30, 100);
-    }
-  },
-  {
-    score: 30,
-    func: function() {
-      $("#lasthit").fadeOut("slow");
-      setTimeout(function() {
-        $("#lasthit").fadeIn("slow");
-      }, Math.random() * 2000 + 2000);
-    }
-  },
-  {
-    score: 20,
-    func: function() {
-      $("#game .circle").css("border-radius", "0px");
-    }
-  },
-  {
-    score: 20,
-    func: function() {
-      hidden = true;
-      setTimeout(function() {
-        hidden = false;
-      }, Math.random() * 2000 + 2000);
-    }
-  }
-];
-
 function setCursor(state) {
   if (state) {
     $("body").removeClass("nocursor");
@@ -85,7 +35,7 @@ function setCursor(state) {
 
 function updateEnergy() {
   if (ingame) {
-    energy -= (1-(1/score))*0.1;
+    energy -= (0.65-(0.65/score))*0.1;
     if (energy <= 0) endGame();
     if (score >= 10 && score < 20)
       setCursor($("body").hasClass("nocursor"));
@@ -128,42 +78,6 @@ function spawnCircle(x, y, r) {
   }
 }
 
-function spawnSquare(x, y, r) {
-  if ($(".squares").length > 2) return;
-  var $s = $("<span class=\"square\">")
-    .css({
-      position: "absolute",
-      top: (x * 100) + "%",
-      left: (y * 100) + "%",
-      width: (r * 100) + "vmin",
-      height: (r * 100) + "vmin"
-    })
-    .on("mousedown", function(e) {
-      hitflag = true;
-      $("#lasthit").css({
-        "left": mouse.x - $("#lasthit").width()/2,
-        "top": mouse.y - $("#lasthit").height()/2
-      });
-      
-      var n = {score: Infinity};
-      while (score < n.score) {
-        n = nerfs[Math.floor(Math.random() * nerfs.length)];
-      }
-      n.func();
-
-      $(this).remove();
-    })
-    .appendTo("#game");
-  setTimeout(function() {
-    $s.remove();
-  }, Math.random() * 700 + 500)
-  if (hidden) {
-    setTimeout(function() {
-      $s.fadeOut("fast");
-    }, 500);
-  }
-}
-
 function startGame() {
   $("#container").hide();
   $("#score").text("1").show();
@@ -184,18 +98,14 @@ function startGame() {
       y = Math.random() * 0.6;
     }
   
-    if (Math.random() > (2/score)+0.8) {
-      spawnSquare(x, y, r);
-    } else {
-      spawnCircle(x, y, r);
-    }
+    spawnCircle(x, y, r);
   }, 200)
   ingame = true;
 }
 
 function endGame() {
   clearInterval(circleint);
-  $("#game").hide();//removeClass("rotating").removeClass("fast");
+  $("#game").hide();
   $("#game > .circle").remove();
   $("#container").show();
   setCursor(true);

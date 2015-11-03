@@ -42,26 +42,11 @@ html, body {
   background-color: #fff;
   color: #000;
   z-index: 1;
-  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+  //box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   border: 5px solid #111;
 }
 .nocursor .circle {
-  cursor: none;
-}
-
-.square {
-  display: inline-block;
-  width: 25vmin;
-  height: 25vmin;
-  background-color: #fff;
-  color: #000;
-  z-index: 1;
-  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
-  box-sizing: border-box;
-  border: 5px solid #111;
-}
-.nocursor .square {
   cursor: none;
 }
 
@@ -72,6 +57,7 @@ html, body {
   height: 1vmin;
   z-index: 2;
   border: none;
+  pointer-events: none;
 }
 
 .spinner {
