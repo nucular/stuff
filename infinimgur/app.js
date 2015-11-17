@@ -196,24 +196,4 @@ app.run(function(ImgurStats) {
       next.click();
     }
   });
-
-  $("#view").on("swipeleft", ".thumbnail.expanded", function(e) {
-    console.log("hi");
-    var thumb = $(".thumbnail.expanded");
-    if (thumb.length) {
-      var next = thumb.next();
-    } else {
-      var next = $($(".thumbnail")[0]);
-    }
-    if (next.length)
-      next.click();
-  }).on("swiperight", function(e) {
-    console.log("hi");
-    var thumb = $(".thumbnail.expanded");
-    if (thumb.length) {
-      var prev = thumb.prev();
-      if (prev.length)
-        prev.click();
-    }
-  });
 });

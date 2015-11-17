@@ -31,6 +31,7 @@ a {
 .container {
   margin-right: auto;
   margin-left: auto;
+  height: 64px;
 }
 @media (min-width: 768px) {
   .container {
@@ -73,6 +74,7 @@ a {
 
 .toolbar h1 {
   display: inline-block;
+  margin-top: 15px; margin-bottom: 0px;
 }
 
 
@@ -116,15 +118,12 @@ a {
 
 
 .spinner, .spinner i {
-  z-index: 9999;
+  z-index: 10;
 }
 .spinner i {
   display: block;
   height: 5px;
   width: 100%;
-  position: fixed;
-  top: 0px;
-  left: 0px;
   background-color: #cfd8dc;
   -webkit-animation: 2s spinner infinite cubic-bezier(0.52, 0, 0.48, 1);
   animation: 2s spinner infinite cubic-bezier(0.52, 0, 0.48, 1);
@@ -132,34 +131,34 @@ a {
 
 @-webkit-keyframes spinner {
   0% {
-    left: -100%;
+    margin-left: -100%;
     width: 100%;
   }
 
   50% {
-    left: 0%;
+    margin-left: 0%;
     width: 100%;
   }
 
   100% {
-    left: 100%;
+    margin-left: 100%;
     width: 0%;
   }
 }
 
 @keyframes spinner {
   0% {
-    left: -100%;
+    margin-left: -100%;
     width: 100%;
   }
 
   50% {
-    left: 0%;
+    margin-left: 0%;
     width: 100%;
   }
 
   100% {
-    left: 100%;
+    margin-left: 100%;
     width: 0%;
   }
 }
