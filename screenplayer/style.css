@@ -1,0 +1,54 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1rem;
+    color: #fff;
+
+    width: 100%;
+    height: 100%;
+
+    text-align: center;
+}
+
+a {
+    color: #0070bb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #035;
+}
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.center-wrapper {
+    display: table;
+    text-align: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+.center-content {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#intro {
+    display: none;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+}
