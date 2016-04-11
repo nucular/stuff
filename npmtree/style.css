@@ -1,0 +1,63 @@
+body {
+  font-family: monospace;
+  font-size: 18px;
+}
+
+form {
+  margin-left: 20px;
+}
+input {
+  border: 1px solid #ccc;
+  background: #fff;
+  font-family: monospace;
+  padding: 10px 20px;
+  font-size: 18px;
+  margin: 10px 10px 10px 0px;
+}
+input:hover {
+  border: 1px solid #aaa;
+}
+
+svg {
+  position: absolute;
+  left: 0px; top: 0px;
+  right: 0px; bottom: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  fill: #000;
+  z-index: 2;
+}
+
+.node text {
+  stroke: #000;
+  stroke-opacity: 0;
+  stroke-width: 1;
+  font-size: 10px;
+}
+
+.node text.name {
+  baseline-shift: -15px;
+  text-anchor: middle;
+}
+
+.node text.version {
+  baseline-shift: -25px;
+  text-anchor: middle;
+  visibility: hidden;
+}
+
+.node:hover text.version {
+  visibility: visible;
+}
+
+
+.link {
+  stroke: #999;
+  stroke-opacity: 0.9;
+  z-index: 1;
+}

@@ -1,0 +1,7 @@
+{
+    "description": "Shows a network graph of npm package dependencies",
+    "hidden": false,
+    "boring": false,
+    "wip": false,
+    "emphasis": false
+}
