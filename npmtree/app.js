@@ -1,26 +1,27 @@
-d3.select("#form").on("submit", function(event) {
-  d3.event.preventDefault();
-  var root = d3.select("#name")
-    .property("value")
-    .match(/([^@]+)@?([^@]+)?/);
-
-  d3.select("#form").style("display", "none");
-
+var run = function(rootname, rootversion) {
   var force = d3.layout.force()
     .charge(-170)
     .linkDistance(70)
     .size([window.innerWidth, window.innerHeight]);
   var color = d3.scale.category20();
 
-  var svg = d3.select("body").append("svg");
+  var svg = d3.select("body").insert("svg", "#form");
+  var container = svg.append("g");
 
   var nodes = force.nodes();
   var links = force.links();
 
+  var zoom = d3.behavior.zoom()
+    .scaleExtent([0.5, 5])
+    .on("zoom", function(d) {
+      container.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+    });
+  svg.call(zoom);
+
   var cache = {}, colormap = {_length: 0};
 
   var update = function () {
-    var link = svg.selectAll("line.link")
+    var link = container.selectAll("line.link")
       .data(links, function(d) { return d.source.id + "-" + d.target.id; });
 
     link.enter()
@@ -29,7 +30,7 @@ d3.select("#form").on("submit", function(event) {
 
     link.exit().remove();
 
-    var node = svg.selectAll("g.node")
+    var node = container.selectAll("g.node")
       .data(nodes, function(d) { return d.id;});
 
     var nodeG = node.enter()
@@ -39,11 +40,12 @@ d3.select("#form").on("submit", function(event) {
 
     nodeG.append("a")
       .attr("href", function(d) { return "https://npmjs.org/package/" + encodeURIComponent(d.name); })
+      .attr("target", "__blank")
       .append("circle")
       .style("fill", function(d) { return color(colormap[d.name]); })
       .attr("r", function(d) {
-        if (d.name == root[1]) return 10;
-        return 5;
+        if (d.name == rootname) return 10;
+        else return 5;
       });
 
     nodeG.append("text")
@@ -66,52 +68,51 @@ d3.select("#form").on("submit", function(event) {
     force.start();
   }
 
-  var walk = function(name, version) {
-    var identifier = name + "@" + version;
-    if (cache[identifier]) {
-      return cache[identifier].id;
-    }
-
+  var walk = function(name, version, cb) {
     if (!colormap[name]) {
       colormap[name] = colormap._length;
       colormap._length++;
     }
 
-    var id = nodes.length;
-    var node = {
-      name: name,
-      version: version,
-      id: id,
-      dependencycount: 0,
-      dependentcount: 0
-    };
-    nodes.push(node);
-    cache[identifier] = node;
-
     d3.json("https://cors-anywhere.herokuapp.com/registry.npmjs.org/" + name + "/" + (version || "latest"), function(error, data) {
       if (error) throw error;
-      node.version = data.version;
-      node.dependencies = data.dependencies;
 
-      if (!data.dependencies) return id;
+      var identifier = data.name + "@" + data.version;
+      if (cache[identifier]) {
+        if (cb) cb(cache[identifier]);
+      } else {
+        var id = nodes.length;
+        var node = {
+          name: data.name,
+          version: data.version,
+          id: id
+        };
+        nodes.push(node);
+        cache[identifier] = node;
 
-      for (var depname in node.dependencies) {
-        var depversion = node.dependencies[depname];
-        var depid = walk(depname, depversion);
-        var depnode = nodes[depid];
-        node.dependencycount++;
-        depnode.dependentcount++;
-        links.push({"source": id, "target": depid});
-        update();
+        if (data.dependencies) {
+          for (var depname in data.dependencies) {
+            var depversion = data.dependencies[depname];
+            walk(depname, depversion, function(depnode) {
+              links.push({"source": id, "target": depnode.id});
+              update();
+            });
+          }
+        } else {
+          update();
+        }
+        if (cb) cb(node);
       }
     });
-    return id;
   }
 
-  walk(root[1], root[2]);
-  //force.start();
+  walk(rootname, rootversion);
 
   window.addEventListener("resize", function(event) {
     force.size([window.innerWidth, window.innerHeight]).resume();
   });
-});
+}
+
+var root = window.location.search.match(/\?package=([^@]+)@?([^@]+)?/);
+if (root)
+  run(root[1], root[2]);
