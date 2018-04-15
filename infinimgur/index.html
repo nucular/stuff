@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html ng-app="infinimgur">
 <head>
-  <title>infinimgur &middot; yet another imgur roulette by nucular</title>
+  <title>infinimgur &middot; has moved</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url=https://infinimgur.github.io">
 
   <link href="//fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
   <link href="style.css" rel="stylesheet" type="text/css">
@@ -12,26 +13,13 @@
   <div class="toolbar z-1">
     <div class="container">
       <h1><span class="thin">infin</span>i<span class="thin">mgur</span></h1>
-      <span ng-controller="StatsCtrl" ng-cloak>
-        {{Math.floor(stats.successrate * 100)}}% success rate ({{stats.sps}} finds, {{stats.rps}} requests per second)
-      </span>
+      has moved
     </div>
-    <div class="spinner" ng-show="loading"><i class="z-1"></i></div>
   </div>
   <div class="toolbar-spacer"></div>
 
-  <section id="view" class="container" infinite-scroll="load()" infinite-scroll-distance="1" infinite-scroll-disabled="loading">
-    <div class="thumbnail z-1" id="{{::v.id}}" ng-click="toggle($event)" ng-repeat="(i,v) in thumbnails" ng-cloak>
-      <img class="z-1" src="{{::v.thumbnail}}"/>
-    </div>
-  </section>
-
-  <div class="scroll-spacer"></div>
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.15/angular.min.js"></script>
-  <script src="ngInfiniteScroll.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.1/jquery.scrollTo.min.js"></script>
-  <script src="app.js"></script>
+  <div class="container padding-top">
+    This page has moved to <a href="https://infinimgur.github.io">infinimgur.github.io</a>. You should be redirected automagically.
+  </div>
 </body>
 </html>

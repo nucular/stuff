@@ -31,7 +31,6 @@ a {
 .container {
   margin-right: auto;
   margin-left: auto;
-  height: 64px;
 }
 @media (min-width: 768px) {
   .container {
@@ -48,11 +47,13 @@ a {
     width: 1170px;
   }
 }
+.padding-top {
+  padding-top: 1em;
+}
 
 .thin {
   font-weight: lighter;
 }
-
 
 .toolbar, .toolbar-spacer {
   display: block;
@@ -75,95 +76,4 @@ a {
 .toolbar h1 {
   display: inline-block;
   margin-top: 15px; margin-bottom: 0px;
-}
-
-
-.thumbnail {
-  float: left;
-  display: inline-block;
-  width: 90px;
-  height: 90px;
-  cursor: pointer;
-  transition: height 0.2s ease, background-color 0.3s ease;
-}
-.thumbnail.expanded {
-  float: none;
-  display: block;
-  width: 100%;
-  height: auto;
-  min-height: 90px;
-  max-height: calc(95vh - 64px);
-  background-color: #cfd8dc;
-  z-index: 8;
-  transition: height 0.2s ease, background-color 0.3s ease;
-}
-
-.thumbnail img {
-  transition: width 0.2s ease, height 0.2s ease;
-}
-.thumbnail.expanded img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 100%;
-  max-height: calc(95vh - 64px);
-  height: auto;
-}
-
-#view {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-}
-
-
-.spinner, .spinner i {
-  z-index: 10;
-}
-.spinner i {
-  display: block;
-  height: 5px;
-  width: 100%;
-  background-color: #cfd8dc;
-  -webkit-animation: 2s spinner infinite cubic-bezier(0.52, 0, 0.48, 1);
-  animation: 2s spinner infinite cubic-bezier(0.52, 0, 0.48, 1);
-}
-
-@-webkit-keyframes spinner {
-  0% {
-    margin-left: -100%;
-    width: 100%;
-  }
-
-  50% {
-    margin-left: 0%;
-    width: 100%;
-  }
-
-  100% {
-    margin-left: 100%;
-    width: 0%;
-  }
-}
-
-@keyframes spinner {
-  0% {
-    margin-left: -100%;
-    width: 100%;
-  }
-
-  50% {
-    margin-left: 0%;
-    width: 100%;
-  }
-
-  100% {
-    margin-left: 100%;
-    width: 0%;
-  }
-}
-
-
-.scroll-spacer {
-  height: calc(100% - 64px);
 }
