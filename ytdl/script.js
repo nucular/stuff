@@ -367,7 +367,7 @@ function fetchInfos(url) {
     $loading.slideDown("slow");
     updateLoading();
     $.ajax({
-        url: "http://corser.herokuapp.com/http://youtube.com/get_video_info?video_id=" + id,
+        url: "https://cors-anywhere.herokuapp.com/http://youtube.com/get_video_info?video_id=" + id,
         dataType: "text",
         error: function(xhr, ts, e) {
             $loading.slideUp("fast");
