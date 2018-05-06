@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Erowid Roulette</title>
+<style>
+html, body {
+    background-color: #000;
+    color: #8d8d8d;
+    font: 500 15.5px arial,sans-serif;
+}
+a {
+    color: inherit;
+}
+body {
+    text-align: center;
+}
+h1 {
+    font: 500 1.7em georgia,serif;
+}
+footer {
+    padding-top: 10em;
+    font-size: 0.7rem;
+}
+</style>
+</head>
+<body>
+<header><h1>Erowid Roulette</h1></header>
+<article>
+    <p>Finding a random Erowid experience for you, sit tight!</p>
+    <p><pre id="log"></pre></p>
+</article>
+<footer>Not affiliated with <a href="https://erowid.org">EROWID</a></footer>
+
+<script>
+function fetchHTML(url) {
+    return fetch(url)
+    .then((r) => r.text())
+    .then(function(html) {
+        var page = document.createElement("html");
+        page.innerHTML = html;
+        return page;
+    });
+}
+var exp = "https://cors-anywhere.herokuapp.com/erowid.org/experiences/exp.cgi";
+var log = document.getElementById("log");
+
+log.innerText += "Fetching experience list...";
+fetchHTML(exp + "?OldSort=PDA_RA&NewSort=PDD")
+.then(function(page) {
+    var entryCount = page.querySelector("center > font[size='2']").innerText.split(" ")[0].substr(1);
+    var randEntry = Math.floor(Math.random() * entryCount);
+    log.innerText += "\nEntries: " + entryCount + "\nFetching entries from " + randEntry + "...";
+    return fetchHTML(exp + "?OldSort=PDA_RA&NewSort=PDD&Count=100&Start=" + randEntry);
+})
+.then(function(page) {
+    var exps = page.querySelectorAll(".exp-list-table td > a");
+    var randExp = exps[Math.floor(Math.random() * exps.length)];
+    var expID = randExp.href.split("=")[1];
+    log.innerText += "\nRedirecting to experience #" + expID + " \"" + randExp.innerText + "\"...";
+    window.location.href = "https://erowid.org/exp.php?ID=" + expID;
+})
+.catch(function(err) {
+    log.innerText += "\nError: " + err + "\nSorry about that!";
+});
+</script>
+</body>
+</html>
