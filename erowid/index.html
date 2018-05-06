@@ -30,8 +30,10 @@ footer {
     <p><pre id="log"></pre></p>
 </article>
 <footer>Not affiliated with <a href="https://erowid.org">EROWID</a></footer>
-
 <script>
+const baseUrl = "https://cors-anywhere.herokuapp.com/erowid.org/experiences/exp.cgi";
+const logEl = document.getElementById("log");
+
 function fetchHTML(url) {
     return fetch(url)
     .then((r) => r.text())
@@ -41,26 +43,30 @@ function fetchHTML(url) {
         return page;
     });
 }
-var exp = "https://cors-anywhere.herokuapp.com/erowid.org/experiences/exp.cgi";
-var log = document.getElementById("log");
 
-log.innerText += "Fetching experience list...";
-fetchHTML(exp + "?OldSort=PDA_RA&NewSort=PDD")
+function log(text) {
+    logEl.innerText += "\r\n" + text;
+}
+
+log("Fetching experience list...");
+fetchHTML(baseUrl + "?OldSort=PDA_RA&NewSort=PDD")
 .then(function(page) {
-    var entryCount = page.querySelector("center > font[size='2']").innerText.split(" ")[0].substr(1);
+    var entryCount = parseInt(page.querySelector("center > font[size='2']").innerText.split(" ")[0].substr(1));
     var randEntry = Math.floor(Math.random() * entryCount);
-    log.innerText += "\nEntries: " + entryCount + "\nFetching entries from " + randEntry + "...";
-    return fetchHTML(exp + "?OldSort=PDA_RA&NewSort=PDD&Count=100&Start=" + randEntry);
+    log("Entry count: " + entryCount.toString());
+    log("Fetching entries starting at " + randEntry + "...");
+    return fetchHTML(baseUrl + "?OldSort=PDA_RA&NewSort=PDD&Count=100&Start=" + randEntry.toString());
 })
 .then(function(page) {
     var exps = page.querySelectorAll(".exp-list-table td > a");
     var randExp = exps[Math.floor(Math.random() * exps.length)];
-    var expID = randExp.href.split("=")[1];
-    log.innerText += "\nRedirecting to experience #" + expID + " \"" + randExp.innerText + "\"...";
-    window.location.href = "https://erowid.org/exp.php?ID=" + expID;
+    var expID = parseInt(randExp.href.split("=")[1]);
+    log("Redirecting to experience #" + expID.toString() + " \"" + randExp.innerText + "\"...");
+    window.location.href = "https://erowid.org/exp.php?ID=" + expID.toString();
 })
 .catch(function(err) {
-    log.innerText += "\nError: " + err + "\nSorry about that!";
+    log("Sorry, something went wrong:");
+    log(err.toString());
 });
 </script>
 </body>
